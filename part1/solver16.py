@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python
 # solver16.py : Circular 16 Puzzle solver
 # Based on skeleton code by D. Crandall, September 2018
 #
@@ -7,12 +7,12 @@ from random import randrange, sample
 import sys
 import string
 
-# shift a specified row left (1) or right (-1)
+# shift a specified row left (-1) or right (1)
 def shift_row(state, row, dir):
     change_row = state[(row*4):(row*4+4)]
     return ( state[:(row*4)] + change_row[-dir:] + change_row[:-dir] + state[(row*4+4):], ("L" if dir == -1 else "R") + str(row+1) )
 
-# shift a specified col up (1) or down (-1)
+# shift a specified col up (-1) or down (1)
 def shift_col(state, col, dir):
     change_col = state[col::4]
     s = list(state)
@@ -39,9 +39,14 @@ def is_goal(state):
 # The solver! - using BFS right now
 def solve(initial_board):
     fringe = [ (initial_board, "") ]
+    print initial_board
     while len(fringe) > 0:
         (state, route_so_far) = fringe.pop()
+        print state
+        print route_so_far
         for (succ, move) in successors( state ):
+            print move
+            print succ
             if is_goal(succ):
                 return( route_so_far + " " + move )
             fringe.insert(0, (succ, route_so_far + " " + move ) )
@@ -60,6 +65,7 @@ print "Start state: "
 print_board(tuple(start_state))
 
 print "Solving..."
+print tuple(start_state)
 route = solve(tuple(start_state))
 
 print "Solution found in " + str(len(route)/3) + " moves:" + "\n" + route
