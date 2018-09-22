@@ -34,7 +34,7 @@ def reverse_move(state):
 
 # check if we've reached the goal
 def is_goal(state):
-    return sorted(state) == list(state)
+    return goal_state == list(state)
     
 # The solver! - using BFS right now
 def solve(initial_board):
@@ -52,6 +52,8 @@ start_state = []
 with open(sys.argv[1], 'r') as file:
     for line in file:
         start_state += [ int(i) for i in line.split() ]
+
+goal_state = sorted(start_state)
 
 if len(start_state) != 16:
     print "Error: couldn't parse start state file"
