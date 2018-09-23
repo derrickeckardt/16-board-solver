@@ -33,13 +33,21 @@ def reverse_move(state):
     return state.translate(string.maketrans("UDLR", "DURL"))
 
 # check if we've reached the goal
+# Changed it to use the stock goal_state so that we did not have sort.  Performance savings.
 def is_goal(state):
-    return sorted(state) == list(state)
+    return goal_state == list(state) 
 
 # Heuristic Function 1: Number of misplaced tiles
+# Worked well for board3,4, and 6. Stalled after board12
 def heurisitic_one(state, goal_state):
     heur_one = sum(([1 if state[i-1] != goal_state[i-1] else 0 for i in state ]))
     return heur_one
+
+# Heuristic Function 2: Number of misplaced tiles
+def heurisitic_two(state, goal_state):
+    heur_one = sum(([1 if state[i-1] != goal_state[i-1] else 0 for i in state ]))
+    return heur_one
+
 
 # The solver! - using BFS right now
 def solve(initial_board):
