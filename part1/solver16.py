@@ -43,26 +43,71 @@ def heurisitic_one(state, goal_state):
     heur_one = sum(([1 if state[i-1] != goal_state[i-1] else 0 for i in state ]))
     return heur_one
 
-# Heuristic Function 2: Number of misplaced tiles
+# Heuristic Function 2: Number of tiles away, manhattan distance
+# Best performance to date.  it worked under 0.2 s for up to board 8, which it did in 10 moves
+# however, ran for 10 minutes on board12 and would not compute a solution
 def heurisitic_two(state, goal_state):
-    heur_one = sum(([1 if state[i-1] != goal_state[i-1] else 0 for i in state ]))
-    return heur_one
+    heur_two_interim = [ abs(state[i-1]-i) for i in goal_state]
+#    print "distance slots", heur_two_interim
+    heur_two_interim = [ (j%4)+(j//4) for j in heur_two_interim]
+#    print "distance board", heur_two_interim
+    heur_two = sum(heur_two_interim)
+    return heur_two
+
+
+# Heuristic Function 3: shortest, longest distance from origin
+# Initially thought this might be a good heuristic, as it would prefer the arrangement
+# that had the board arranged with the shortest, longest distance between pieces.
+# The thought would be that it would focus on the ones that were the least mixed up.
+# as i plaayed with it more, realize, that as it got higher the move count had little
+# to no impact in my heuristic f(s) calculation
+# Also realized it was most likely not admissible, since
+# i could end up with the 16 in the 1 slot, which would yield 15, and that would 
+# overestimate the cost.
+def heurisitic_three(state, goal_state):
+    heur_three_interim = [ abs(state[i-1]-i) for i in state]
+#    print "distance board", heur_three_interim
+    heur_three = max(heur_three_interim)
+    return heur_three
+
+# Heuristic Function 4: Shortest, longest distance, manhattan distance
+# similar to before, but I used the manhattan distance used in #4, but the lostest it would be is 6
+# which seems like that would still be admissable.  It did work for upto board 6 in 13 seconds.
+def heurisitic_four(state, goal_state):
+    heur_four_interim = [ abs(state[i-1]-i) for i in goal_state]
+#    print "distance slots", heur_two_interim
+    heur_four_interim = [ (j%4)+(j//4) for j in heur_four_interim]
+#    print "distance board", heur_two_interim
+    heur_four = max(heur_four_interim)
+    return heur_four
+
+
+# Heuristic Function 5: Going back to the notes, let's calculate the permutation
+# inversion for this board.
+def heurisitic_five(state, goal_state):
+    heur_five_interim = [ abs(state[i-1]-i) for i in goal_state]
+#    print "distance slots", heur_two_interim
+    heur_five_interim = [ (j%4)+(j//4) for j in heur_five_interim]
+#    print "distance board", heur_two_interim
+    heur_five = max(heur_five_interim)
+    return heur_five
+
 
 
 # The solver! - using BFS right now
 def solve(initial_board):
     fringe = PriorityQueue()
-    fringe.put((heurisitic_one(initial_board,goal_state),[(initial_board),"",0]))
+    fringe.put((heurisitic_two(initial_board,goal_state),[(initial_board),"",0]))
     i = 0
     while not fringe.empty() > 0:
         (heuristic_value, fringeitem) = fringe.get()
         [state, route_so_far,moves_so_far] = fringeitem
-#        print heuristic_value, moves_so_far, i
+        #print heuristic_value, moves_so_far, i
         for (succ, move) in successors( state ):
-#            print heurisitic_one(succ, goal_state)
+            #print heurisitic_three(succ, goal_state)
             if is_goal(succ):
                 return( route_so_far + " " + move )
-            fringe.put((heurisitic_one(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
+            fringe.put((heurisitic_two(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
             i += 1
     return False
 
@@ -71,7 +116,6 @@ start_state = []
 with open(sys.argv[1], 'r') as file:
     for line in file:
         start_state += [ int(i) for i in line.split() ]
-        print start_state
 
 goal_state = sorted(start_state)
 
