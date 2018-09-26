@@ -61,7 +61,8 @@ def heurisitic_two_mod(state, goal_state):
     heur_two_y = [ (j//4) if (j//4) !=3 else 1 for j in heur_two_interim]
     heur_two_sum = list( map(add, heur_two_x, heur_two_y)) 
     #print heur_two_sum
-    heur_two = sum(heur_two_sum)
+    print "Try doing two loops"
+    heur_two = max(heur_two_sum)
     #print heur_two
     return heur_two
 
@@ -118,8 +119,8 @@ def solve(initial_board):
                 return( route_so_far + " " + move )
             fringe.put((heurisitic_two_mod(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
             i += 1
-        if i%32 == 0:
-            print i
+#        if i%32 == 0:
+#            print i
     return False
 
 # test cases
