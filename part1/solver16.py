@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # solver16.py : Circular 16 Puzzle solver
 # Based on skeleton code by D. Crandall, September 2018
-
+#
 from Queue import PriorityQueue
 from random import randrange, sample
 import sys
 import string
+from operator import add
 
 # shift a specified row left (-1) or right (1)
 def shift_row(state, row, dir):
@@ -48,10 +49,22 @@ def heurisitic_one(state, goal_state):
 # however, ran for 10 minutes on board12 and would not compute a solution
 #in practice, i ended up calculating the difference between the title that is actually there, and what the value should be
 def heurisitic_two(state, goal_state):
-    heur_two_interim = [ abs(state[i-1]-i) for i in goal_state]
+    heur_two_interim = [ abs(state[i-1]-i) for i in state]
     heur_two_interim = [ (j%4)+(j//4) for j in heur_two_interim]
     heur_two = sum(heur_two_interim)
     return heur_two
+
+
+def heurisitic_two_mod(state, goal_state):
+    heur_two_interim = [ abs(state[i-1]-i) for i in state]
+    heur_two_x = [ (j%4) if (j%4) != 3 else 1 for j in heur_two_interim]
+    heur_two_y = [ (j//4) if (j//4) !=3 else 1 for j in heur_two_interim]
+    heur_two_sum = list( map(add, heur_two_x, heur_two_y)) 
+    #print heur_two_sum
+    heur_two = sum(heur_two_sum)
+    #print heur_two
+    return heur_two
+
 
 # Heuristic Function 3: shortest, longest distance from origin
 # Initially thought this might be a good heuristic, as it would prefer the arrangement
@@ -93,7 +106,7 @@ def heurisitic_five(state, goal_state):
 # The solver! - using BFS right now
 def solve(initial_board):
     fringe = PriorityQueue()
-    fringe.put((heurisitic_five(initial_board,goal_state),[(initial_board),"",0]))
+    fringe.put((heurisitic_two_mod(initial_board,goal_state),[(initial_board),"",0]))
     i = 0
     while not fringe.empty() > 0:
         (heuristic_value, fringeitem) = fringe.get()
@@ -103,8 +116,10 @@ def solve(initial_board):
             #print heurisitic_three(succ, goal_state)
             if is_goal(succ):
                 return( route_so_far + " " + move )
-            fringe.put((heurisitic_five(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
+            fringe.put((heurisitic_two_mod(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
             i += 1
+        if i%32 == 0:
+            print i
     return False
 
 # test cases
