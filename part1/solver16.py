@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # solver16.py : Circular 16 Puzzle solver
 # Based on skeleton code by D. Crandall, September 2018
-#
+
 from Queue import PriorityQueue
 from random import randrange, sample
 import sys
@@ -46,14 +46,12 @@ def heurisitic_one(state, goal_state):
 # Heuristic Function 2: Number of tiles away, manhattan distance
 # Best performance to date.  it worked under 0.2 s for up to board 8, which it did in 10 moves
 # however, ran for 10 minutes on board12 and would not compute a solution
+#in practice, i ended up calculating the difference between the title that is actually there, and what the value should be
 def heurisitic_two(state, goal_state):
     heur_two_interim = [ abs(state[i-1]-i) for i in goal_state]
-#    print "distance slots", heur_two_interim
     heur_two_interim = [ (j%4)+(j//4) for j in heur_two_interim]
-#    print "distance board", heur_two_interim
     heur_two = sum(heur_two_interim)
     return heur_two
-
 
 # Heuristic Function 3: shortest, longest distance from origin
 # Initially thought this might be a good heuristic, as it would prefer the arrangement
@@ -66,7 +64,6 @@ def heurisitic_two(state, goal_state):
 # overestimate the cost.
 def heurisitic_three(state, goal_state):
     heur_three_interim = [ abs(state[i-1]-i) for i in state]
-#    print "distance board", heur_three_interim
     heur_three = max(heur_three_interim)
     return heur_three
 
@@ -75,21 +72,20 @@ def heurisitic_three(state, goal_state):
 # which seems like that would still be admissable.  It did work for upto board 6 in 13 seconds.
 def heurisitic_four(state, goal_state):
     heur_four_interim = [ abs(state[i-1]-i) for i in goal_state]
-#    print "distance slots", heur_two_interim
-    heur_four_interim = [ (j%4)+(j//4) for j in heur_four_interim]
-#    print "distance board", heur_two_interim
     heur_four = max(heur_four_interim)
     return heur_four
 
 
 # Heuristic Function 5: Going back to the notes, let's calculate the permutation
-# inversion for this board.
+# inversion for this board.  In the 8-puzzle, we found it to be inadmissable.  However, there are some differences
+# between that puzzle and this puzzle.  First of all, how the pieces move, and 
+# that there are 16 puzzle pieces, and not 15.
 def heurisitic_five(state, goal_state):
     heur_five_interim = [ abs(state[i-1]-i) for i in goal_state]
 #    print "distance slots", heur_two_interim
-    heur_five_interim = [ (j%4)+(j//4) for j in heur_five_interim]
+    #heur_five_interim = [ (j%4)+(j//4) for j in heur_five_interim]
 #    print "distance board", heur_two_interim
-    heur_five = max(heur_five_interim)
+    heur_five = sum(heur_five_interim)
     return heur_five
 
 
@@ -97,7 +93,7 @@ def heurisitic_five(state, goal_state):
 # The solver! - using BFS right now
 def solve(initial_board):
     fringe = PriorityQueue()
-    fringe.put((heurisitic_two(initial_board,goal_state),[(initial_board),"",0]))
+    fringe.put((heurisitic_five(initial_board,goal_state),[(initial_board),"",0]))
     i = 0
     while not fringe.empty() > 0:
         (heuristic_value, fringeitem) = fringe.get()
@@ -107,7 +103,7 @@ def solve(initial_board):
             #print heurisitic_three(succ, goal_state)
             if is_goal(succ):
                 return( route_so_far + " " + move )
-            fringe.put((heurisitic_two(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
+            fringe.put((heurisitic_five(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
             i += 1
     return False
 
