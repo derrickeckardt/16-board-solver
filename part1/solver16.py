@@ -33,6 +33,23 @@ def successors(state):
 def reverse_move(state):
     return state.translate(string.maketrans("UDLR", "DURL"))
 
+# Produces the x-y coordinates for a given tile on a grid of (0,3) by (0,3), where 0,0 is the upper left
+def get_coordinates(tile):
+    tile_x = (tile-1)%4
+    tile_y = (tile-1)//4   #offsetting by one ensures that 16 doesn't yield y=4, since our grid only goes from 0 to 3
+    return tile_x, tile_y
+
+# Gets the manhattan distance of a tile from where it is to where it is in the goal state
+def get_manhattan(current, goal):
+    if current == goal:
+        return 0
+    else
+        current_x,current_y = get_coordinates(current)
+        goal_x,goal_y = get_coordinates(goal)
+        
+        
+        return d_man
+
 # check if we've reached the goal
 # Changed it to use the stock goal_state so that we did not have sort.  Performance savings.
 def is_goal(state):
