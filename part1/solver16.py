@@ -61,8 +61,7 @@ def heurisitic_two_mod(state, goal_state):
     heur_two_y = [ (j//4) if (j//4) !=3 else 1 for j in heur_two_interim]
     heur_two_sum = list( map(add, heur_two_x, heur_two_y)) 
     #print heur_two_sum
-    print "Try doing two loops"
-    heur_two = max(heur_two_sum)
+    heur_two = float(sum(heur_two_sum))/4.0
     #print heur_two
     return heur_two
 
