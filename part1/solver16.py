@@ -61,7 +61,7 @@ def heurisitic_two_mod(state, goal_state):
     heur_two_y = [ (j//4) if (j//4) !=3 else 1 for j in heur_two_interim]
     heur_two_sum = list( map(add, heur_two_x, heur_two_y)) 
     #print heur_two_sum
-    heur_two = float(sum(heur_two_sum))/3.0
+    heur_two = float(sum(heur_two_sum))/4.0
     #print heur_two
     return heur_two
 
@@ -130,7 +130,7 @@ def solve(initial_board):
             #print heurisitic_three(succ, goal_state)
             if is_goal(succ):
                 return( route_so_far + " " + move )
-            fringe.put((heurisitic_six(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
+            fringe.put((heurisitic_two_mod(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
     return False
 
 # test cases
