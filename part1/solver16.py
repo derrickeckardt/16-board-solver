@@ -107,19 +107,19 @@ def heurisitic_five(state, goal_state):
 def solve(initial_board):
     fringe = PriorityQueue()
     fringe.put((heurisitic_two_mod(initial_board,goal_state),[(initial_board),"",0]))
-    i = 0
     while not fringe.empty() > 0:
         (heuristic_value, fringeitem) = fringe.get()
         [state, route_so_far,moves_so_far] = fringeitem
-        #print heuristic_value, moves_so_far, i
+        print "state ", state
+        print "heuristic value ", heuristic_value
+        print "heuristic value ", heurisitic_two_mod(state,goal_state) ," + ",moves_so_far
+        print "route_so_far ", route_so_far 
+        heuristic_value, moves_so_far, i
         for (succ, move) in successors( state ):
             #print heurisitic_three(succ, goal_state)
             if is_goal(succ):
                 return( route_so_far + " " + move )
             fringe.put((heurisitic_two_mod(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
-            i += 1
-#        if i%32 == 0:
-#            print i
     return False
 
 # test cases
