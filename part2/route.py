@@ -34,6 +34,9 @@ print road_segments[:5]
 
 
 # BFS Function
+def bfs_function():
+    return 0
+    
 # Cost Function
 # DFS Function
 # IDS Function
