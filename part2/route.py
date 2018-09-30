@@ -6,7 +6,7 @@
 # ./route.py [start-city] [end-city] [routing-algorithm] [cost-function]
 #
 # where:
-# [start-city] and [end-city are the cities we need a route between.
+# [start-city] and [end-city] are the cities we need a route between.
 # [routing-algorithm] is one of:
 # - bfs uses breadth-first search, which ignores edge weights in the state graph)
 # - uniform is uniform cost search (the variant of bfs that takes edge weights into consideration)
