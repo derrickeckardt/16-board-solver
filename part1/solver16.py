@@ -88,7 +88,9 @@ def heurisitic_two_mod(state, goal_state):
     #print heur_two
     return heur_two
 
-#Proper Manhattan Distance based on Stack Overflow 
+# Proper Manhattan Distance inspired by the excerpt referenced in the question:
+# https://stackoverflow.com/questions/36490073/heuristic-for-rubiks-cube
+# Since this movement is similar to that of a rubik's cube, thought it might be helpful
 def heurisitic_seven(state, goal_state):
     corners = [1,4,13,16]
     edges = [2,3,5,8,9,12,14,15]
