@@ -35,13 +35,35 @@ def successors(start_city):
     successor_cities += rs[(rs.city2==start_city)][["city1", "length","time"]].values.tolist()
     return successor_cities
 
-# Solve BFS and DFS Function
-def solve_BFS(start_city,end_city,routing_algorithm):
+# Solve BFS Function
+def solve_BFS(start_city,end_city):
+    print 'Solving with BFS...'
     fringe = [[start_city, 0, 0, str(start_city)+","]]
-    # if routing_algorithm == "bfs":
-    #     r_a = 0
-    # elif routing_algorithm == "dfs":
-    #     r_a = int()
+    while len(fringe) > 0:
+        [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop(0)
+        for city, distance, time in successors( current_city):
+            # Check to see if city has not been visited already on this route
+            # if so, we've backtracked, and will move on to the next successor.
+            if (","+city+",") not in route_so_far:
+                if city==end_city:
+                    return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
+                fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ","])
+    return False
+
+# Solve DFS Function
+# originally I had this combined with BFS since there was one difference.  However,
+# the only way I could figure out was to use an if statement on each iteration
+# which was way too many operations. I rather have longer code than fewer, clunkier
+# function.  Of course, there might have been a more graceful way than I was I thinking
+# of doing it.  A better coder might see a cleaner way to incorporate them.
+
+# since IDF is a version of DFS which goes with DFS as well
+def solve_DFS(start_city,end_city,routing_algorithm):
+    if routing_algorithm == "dfs":
+        print "Solving with DFS..."
+    elif routing_algorith == "ids":
+        print "Solving with IDS"
+    fringe = [[start_city, 0, 0, str(start_city)+","]]
     while len(fringe) > 0:
         [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop()
         for city, distance, time in successors( current_city):
@@ -52,6 +74,7 @@ def solve_BFS(start_city,end_city,routing_algorithm):
                     return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
                 fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ","])
     return False
+
 
 # Solve Uniform Cost
 
@@ -105,6 +128,11 @@ rs['time'] = rs.length / rs.speed_limit
 
 # print "Los_Angeles,_California"
 # successors("Los_Angeles,_California")
+if routing_algorithm == "bfs":     
+    los_gehts = solve_BFS(start_city,end_city)
+elif routing_algorithm == "dfs":
+    los_gehts = solve_DFS(start_city,end_city, routing_algorithm)
+elif routing_algorithm == "ids":
+    los_gehts = solve_IDF(start_city,end_city, routing_algorithm)
 
-los_gehts = solve_BFS(start_city,end_city, routing_algorithm)
 print los_gehts if los_gehts else "Sorry, no solution found. :("
