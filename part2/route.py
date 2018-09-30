@@ -62,13 +62,17 @@ cs = pd.read_csv('city-gps.txt', delimiter=' ', header=None, names=['city', 'lat
 # [cost-function] = time is selected.  So, for [cost-function]  equal to segments
 # or distance, we can leave them in, as time is not a critical factor.  Opting to 
 # be conservative in our routining for the time option, I eliminated those 35 data
-# points if time was entered as the prompt.
+# points if time was entered as the prompt.  
 
 # Null speed limit cases:
 # In road segments data, there were 19 data points with a null value.  Again, we
 # don't know the values of these.  More so, these are principally located in
 # in Nova Scotia, which could have some very different speed limits due to the
-# cold, icy, remote nature of nova scotia.  For 
+# cold, icy, remote nature of nova scotia.  For the sake of being conservative again
+# probably best to eliminate those data points as well.
+
+# Cleanup Road Segments data.  Eliminating 54 of 12000+ data points.  Adds a trivial
+# amount of suboptimality to the overall solution. 
 
 if cost_function == "time":
     rs=rs[rs.speed_limit!= 0].dropna(how="any")
