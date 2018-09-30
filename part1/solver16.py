@@ -43,12 +43,18 @@ def get_coordinates(tile):
 def get_manhattan(current, goal):
     if current == goal:
         return 0
-    else
+    else:
         current_x,current_y = get_coordinates(current)
         goal_x,goal_y = get_coordinates(goal)
-        
-        
-        return d_man
+        if abs(goal_x - current_x) == 3:
+            d_man_x=1
+        else:
+            d_man_x= abs(goal_x - current_x)
+        if abs(goal_y - current_y) == 3:
+            d_man_y=1
+        else:
+            d_man_y= abs(goal_y - current_y)
+        return d_man_x + d_man_y
 
 # check if we've reached the goal
 # Changed it to use the stock goal_state so that we did not have sort.  Performance savings.
@@ -81,6 +87,11 @@ def heurisitic_two_mod(state, goal_state):
     heur_two = float(sum(heur_two_sum))/4.0
     #print heur_two
     return heur_two
+    
+def heurisitic_seven(state, goal_state):
+    heur_seven_interim = [get_manhattan(state[i-1],i) for i in goal_state]
+    heur_seven = float(sum(heur_seven_interim)) / 3.0
+    return heur_seven
 
 def heurisitic_six(state, goal_state):
     corners = [goal_state[0], goal_state[3], goal_state[12], goal_state[15]]
@@ -134,20 +145,20 @@ def heurisitic_five(state, goal_state):
 # The solver! - using BFS right now
 def solve(initial_board):
     fringe = PriorityQueue()
-    fringe.put((heurisitic_six(initial_board,goal_state),[(initial_board),"",0]))
+    fringe.put((heurisitic_seven(initial_board,goal_state),[(initial_board),"",0]))
     while not fringe.empty() > 0:
         (heuristic_value, fringeitem) = fringe.get()
         [state, route_so_far,moves_so_far] = fringeitem
         # print "state ", state
         # print "heuristic value ", heuristic_value
-        # print "heuristic value ", heurisitic_six(state,goal_state) ," + ",moves_so_far
+        # print "heuristic value ", heurisitic_seven(state,goal_state) ," + ",moves_so_far
         # print "route_so_far ", route_so_far 
         heuristic_value, moves_so_far, i
         for (succ, move) in successors( state ):
             #print heurisitic_three(succ, goal_state)
             if is_goal(succ):
                 return( route_so_far + " " + move )
-            fringe.put((heurisitic_two_mod(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
+            fringe.put((heurisitic_seven(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
     return False
 
 # test cases
