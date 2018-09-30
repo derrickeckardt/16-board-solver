@@ -2,6 +2,8 @@
 # solver16.py : Circular 16 Puzzle solver
 # Based on skeleton code by D. Crandall, September 2018
 #
+
+# hit segmentation fault, which means th
 from Queue import PriorityQueue
 from random import randrange, sample
 import sys
@@ -99,9 +101,9 @@ def heurisitic_seven(state, goal_state):
     heur_seven_corners = float(sum(heur_seven_corners)) / 1.0
     heur_seven_edges = [get_manhattan(state[i-1],i) for i in edges]
     heur_seven_edges = float(sum(heur_seven_edges)) / 2.0
-    heur_seven_middles = [get_manhattan(state[i-1],i) for i in middles]
-    heur_seven_middles = float(sum(heur_seven_middles)) / 1.0
-    return max([heur_seven_corners,heur_seven_edges,heur_seven_middles])
+    # heur_seven_middles = [get_manhattan(state[i-1],i) for i in middles]
+    # heur_seven_middles = float(sum(heur_seven_middles)) / 2.0
+    return max([heur_seven_corners,heur_seven_edges])#,heur_seven_middles])
 
 # 
 def heurisitic_eight(state, goal_state):
