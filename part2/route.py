@@ -22,22 +22,44 @@
 import sys
 import pandas as pd
 
-# Define some functions:
-# BFS Function and DFS are similarily structured, just how we 
-def bfs_function():
-    return 0
-    
-# Cost Function
-# DFS Function
-# IDS Function
-# A* Function
-
-
-# Get command line inputs
+# Import command Prompt Values
 start_city = sys.argv[1]
 end_city = sys.argv[2]
 routing_algorithm = sys.argv[3]
 cost_function = sys.argv[4]
+
+
+# Define some functions:
+def successors(start_city):
+    successor_cities = rs[(rs.city1==start_city)][["city2", "length","time"]].values.tolist()
+    successor_cities += rs[(rs.city2==start_city)][["city1", "length","time"]].values.tolist()
+    return successor_cities
+
+# Solve BFS and DFS Function
+def solve_BFS(start_city,end_city,routing_algorithm):
+    fringe = [[start_city, 0, 0, str(start_city)+","]]
+    # if routing_algorithm == "bfs":
+    #     r_a = 0
+    # elif routing_algorithm == "dfs":
+    #     r_a = int()
+    while len(fringe) > 0:
+        [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop()
+        for city, distance, time in successors( current_city):
+            # Check to see if city has not been visited already on this route
+            # if so, we've backtracked, and will move on to the next successor.
+            if (","+city+",") not in route_so_far:
+                if city==end_city:
+                    return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
+                fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ","])
+    return False
+
+# Solve Uniform Cost
+
+# Solve IDS
+
+# Solve A*
+
+
 
 # import roads segments as rs
 rs = pd.read_csv('road-segments.txt', delimiter=' ', header=None, names=['city1', 'city2','length','speed_limit','hwy_name'])
@@ -58,11 +80,8 @@ cs = pd.read_csv('city-gps.txt', delimiter=' ', header=None, names=['city', 'lat
 # 85 mph, which is a wide variance.  There are two options, we can assume a low speed
 # limit, such as the minimum, or bottom quartile value, which won't get anyone 
 # into too much trouble, or assume that road can't be  used and remove it from #
-# our dataset.  Something to note is that the speed limit is only needed if 
-# [cost-function] = time is selected.  So, for [cost-function]  equal to segments
-# or distance, we can leave them in, as time is not a critical factor.  Opting to 
-# be conservative in our routining for the time option, I eliminated those 35 data
-# points if time was entered as the prompt.  
+# our dataset.  Opting to be conservative in our routining for the time option, 
+# I eliminated those 35 data points if time was entered as the prompt.  
 
 # Null speed limit cases:
 # In road segments data, there were 19 data points with a null value.  Again, we
@@ -74,7 +93,18 @@ cs = pd.read_csv('city-gps.txt', delimiter=' ', header=None, names=['city', 'lat
 # Cleanup Road Segments data.  Eliminating 54 of 12000+ data points.  Adds a trivial
 # amount of suboptimality to the overall solution. 
 
-if cost_function == "time":
-    rs=rs[rs.speed_limit!= 0].dropna(how="any")
-    print rs.describe()
-    print rs.count()
+rs=rs[rs.speed_limit!= 0].dropna(how="any")
+
+# Calculate time column and add to datatable
+rs['time'] = rs.length / rs.speed_limit
+
+# print "Appleton,_Wisconsin"
+# successors("Appleton,_Wisconsin")
+# print "Jct_FL_417_&_E-W_Expwy,_Florida"
+# successors("Jct_FL_417_&_E-W_Expwy,_Florida")
+
+# print "Los_Angeles,_California"
+# successors("Los_Angeles,_California")
+
+los_gehts = solve_BFS(start_city,end_city, routing_algorithm)
+print los_gehts if los_gehts else "Sorry, no solution found. :("
