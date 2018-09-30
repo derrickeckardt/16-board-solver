@@ -72,4 +72,3 @@ cs = pd.read_csv('city-gps.txt', delimiter=' ', header=None, names=['city', 'lat
 
 if cost_function == "time":
     rs=rs[rs.speed_limit!= 0].dropna(how="any")
-
