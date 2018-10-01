@@ -29,9 +29,6 @@ end_city = sys.argv[2]
 routing_algorithm = sys.argv[3]
 cost_function = sys.argv[4]
 
-
-
-
 # Define some functions:
 def successors(start_city):
     successor_cities = rs[(rs.city1==start_city)][["city2", "length","time"]].values.tolist()
@@ -92,13 +89,13 @@ def solve_DFS(start_city,end_city,routing_algorithm):
 # find something.  DFS is suboptimal, but it runs much faster than BFS in most cases
 # since it saves on the amount of states it saves in the fringe.
 
-
 # Solve Uniform Cost
 def solve_Uniform(start_city,end_city, cost_function):
     print 'Solving with Uniform Cost with a cost function of ' +cost_function + '...'
     fringe = [[start_city, 0, 0, str(start_city)+","]]
     goal_time = 1000000
     goal_distance = 1000000
+    goal_route = ""
     if cost_function == "distance":
         cost_column = 1
     elif cost_function == "time":
