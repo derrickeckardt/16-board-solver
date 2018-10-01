@@ -16,7 +16,12 @@
 # In general, think of this as a search problem.
 # 
 # Initial State: A blank list of groups
-# Goal State: 
+# Goal State: All students assigned to a group
+# Successor: Adding one individual to an existing group or into a new group 
+# Heurestic Function: 
+# Cost function: Everytime we add someone on, it will change the amount of time
+#     which will increase the amount of time.  The perfect add would decrease
+#     the time spent.
 
 
 print "Oy, vey."
