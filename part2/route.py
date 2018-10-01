@@ -103,13 +103,16 @@ def solve_Uniform(start_city,end_city, cost_function):
         cost_column = 1
     elif cost_function == "time":
         cost_column = 2
+    elif cost_function == "segments":
+        #bfs stops when it finds it, and goes segment by segment.  reuse that code here.
+        return solve_BFS(start_city,end_city)
     while len(fringe) > 0:
         # Learned how to sort list of list from, and then applied it to my case
         # https://stackoverflow.com/questions/5201191/method-to-sort-a-list-of-lists
         fringe = sorted(fringe, key=itemgetter(cost_column))
         #print fringe
         [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop(0)
-#        print distance_so_far, " ",goal_distance, " | ", time_so_far, " ", goal_time
+        # print distance_so_far, " ",goal_distance, " | ", time_so_far, " ", goal_time
         if (goal_time < time_so_far and cost_column == 2) or (goal_distance < distance_so_far and cost_column ==1):
             return str(goal_distance) + " " + str(goal_time) + " " + goal_route
         for city, distance, time in successors( current_city):
