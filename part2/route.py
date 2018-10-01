@@ -130,6 +130,7 @@ def solve_Uniform(start_city,end_city, cost_function):
 
 
 # Solve A*
+# heuristic = euclidian distance
 
 
 
