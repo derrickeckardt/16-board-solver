@@ -16,10 +16,14 @@
 # In general, think of this as a search problem.
 # 
 # Initial State: A blank list of groups
+# 
 # Goal State: All students assigned to a group
+#
 # Successor: Adding one individual to an existing group or into a new group.  So, 
 #    for each next state, we would have all the remaining individuals yet to be assigned.
+#
 # Heurestic Function: Summing the total amount of time that it would take
+#
 # Cost function: Everytime we add someone on, it will change the amount of time
 #     which will increase the amount of time.  The perfect add would decrease
 #     the time spent.
@@ -37,6 +41,20 @@ k = sys.argv[2]
 m = sys.argv[3]
 n = sys.argv[4]
 
+# Define some functions
+# Score the group
+def score_group(group):
+    # this would be calculated each time someone is added to a group and kept with the group
+    # Group structure should be [name, name, name, int(score)]
+    # calculate 1-minute upsets for wrong group size
+    # calculate m for minutes assigned to group for each enemy that is assigned
+    # calculate n for minutes assigned to group for each friend that is not assigned
+    
+def score_all(groups):
+    # this would be used to describe each state
+    # Sum all of the individual scores for each group
+    # calculate k for minutes for number of groups
+    # sum of all score groups plus k* groups
 
 # Given the scoring factors, there are somethings I can do to help myself, by
 # simplifying the initial state.  Students have already done some work to make
@@ -72,6 +90,6 @@ n = sys.argv[4]
 # Step Zero - Read in the datafile as a list of list
 class_list = pd.read_csv(input_file, delimiter=" ",header=None,names=['student','pref','friends','enemies'])
 
-print class_list 
+#print class_list 
 # Next Step - 
 
