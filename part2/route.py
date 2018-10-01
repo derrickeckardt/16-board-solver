@@ -57,22 +57,28 @@ def solve_BFS(start_city,end_city):
 # function.  Of course, there might have been a more graceful way than I was I thinking
 # of doing it.  A better coder might see a cleaner way to incorporate them.
 
-# since IDF is a version of DFS which goes with DFS as well
+# since IDF is a version of DFS which goes with DFS as well.  For DFS, we set it to 
+# an absurdly high level, effectively infiniti.  This allows us to us the same 
+# function for IDS and DFS
 def solve_DFS(start_city,end_city,routing_algorithm):
     if routing_algorithm == "dfs":
         print "Solving with DFS..."
-    elif routing_algorith == "ids":
-        print "Solving with IDS"
-    fringe = [[start_city, 0, 0, str(start_city)+","]]
-    while len(fringe) > 0:
-        [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop()
-        for city, distance, time in successors( current_city):
-            # Check to see if city has not been visited already on this route
-            # if so, we've backtracked, and will move on to the next successor.
-            if (","+city+",") not in route_so_far:
-                if city==end_city:
-                    return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
-                fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ","])
+        start_depth = 1000000 
+    elif routing_algorithm == "ids":
+        print "Solving with IDS..."
+        start_depth = 1
+    for i in range(start_depth,1000001):
+        fringe = [[start_city, 0, 0, str(start_city)+",",0]]
+        while len(fringe) > 0:
+            [current_city, distance_so_far, time_so_far, route_so_far,depth_so_far] = fringe.pop()
+            for city, distance, time in successors( current_city):
+                # Check to see if city has not been visited already on this route
+                # if so, we've backtracked, and will move on to the next successor.
+                if (","+city+",") not in route_so_far:
+                    if city==end_city:
+                        return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
+                    if depth_so_far+1 != i: # 
+                        fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ",",depth_so_far+1])
     return False
 
 
@@ -133,6 +139,6 @@ if routing_algorithm == "bfs":
 elif routing_algorithm == "dfs":
     los_gehts = solve_DFS(start_city,end_city, routing_algorithm)
 elif routing_algorithm == "ids":
-    los_gehts = solve_IDF(start_city,end_city, routing_algorithm)
+    los_gehts = solve_DFS(start_city,end_city, routing_algorithm)
 
 print los_gehts if los_gehts else "Sorry, no solution found. :("
