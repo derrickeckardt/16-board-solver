@@ -29,6 +29,8 @@ routing_algorithm = sys.argv[3]
 cost_function = sys.argv[4]
 
 
+
+
 # Define some functions:
 def successors(start_city):
     successor_cities = rs[(rs.city1==start_city)][["city2", "length","time"]].values.tolist()
@@ -68,6 +70,7 @@ def solve_DFS(start_city,end_city,routing_algorithm):
         print "Solving with IDS..."
         start_depth = 1
     for i in range(start_depth,1000001):
+        # print "depth = ",i
         fringe = [[start_city, 0, 0, str(start_city)+",",0]]
         while len(fringe) > 0:
             [current_city, distance_so_far, time_so_far, route_so_far,depth_so_far] = fringe.pop()
@@ -78,13 +81,32 @@ def solve_DFS(start_city,end_city,routing_algorithm):
                     if city==end_city:
                         return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
                     if depth_so_far+1 != i: # 
+                        # print "Depth ",depth_so_far+1
                         fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ",",depth_so_far+1])
     return False
 
+# DFS can't get anything in reasonable amount of time.  With 12000 road segments,
+# it's really easy for the it to take a route away from the segment, and just keep
+# moving around.  IDS helps brings tames that, and makes it much easier to actually
+# find something.  DFS is suboptimal, but it runs much faster than BFS in most cases
+# since it saves on the amount of states it saves in the fringe.
+
 
 # Solve Uniform Cost
+def solve_Uniform(start_city,end_city, cost_function):
+    print 'Solving with Uniform Cost with a cost function of ' +cost_function + '...'
+    fringe = [[start_city, 0, 0, str(start_city)+","]]
+    while len(fringe) > 0:
+        [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop(0)
+        for city, distance, time in successors( current_city):
+            # Check to see if city has not been visited already on this route
+            # if so, we've backtracked, and will move on to the next successor.
+            if (","+city+",") not in route_so_far:
+                if city==end_city:
+                    return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
+                fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ","])
+    return False
 
-# Solve IDS
 
 # Solve A*
 
@@ -127,18 +149,25 @@ rs=rs[rs.speed_limit!= 0].dropna(how="any")
 # Calculate time column and add to datatable
 rs['time'] = rs.length / rs.speed_limit
 
-# print "Appleton,_Wisconsin"
-# successors("Appleton,_Wisconsin")
-# print "Jct_FL_417_&_E-W_Expwy,_Florida"
-# successors("Jct_FL_417_&_E-W_Expwy,_Florida")
 
-# print "Los_Angeles,_California"
-# successors("Los_Angeles,_California")
-if routing_algorithm == "bfs":     
-    los_gehts = solve_BFS(start_city,end_city)
-elif routing_algorithm == "dfs":
-    los_gehts = solve_DFS(start_city,end_city, routing_algorithm)
-elif routing_algorithm == "ids":
-    los_gehts = solve_DFS(start_city,end_city, routing_algorithm)
+# Check to see if start city and end city are possible city pairs, kick out if not
+##############################################################
+# Still to do!
+##############################################################
+##############################################################
+
+if cost_function == "segments" or cost_function== "distance" or cost_function == "time":
+    if routing_algorithm == "bfs":     
+        los_gehts = solve_BFS(start_city,end_city)
+    elif routing_algorithm == "dfs":
+        los_gehts = solve_DFS(start_city,end_city, routing_algorithm)
+    elif routing_algorithm == "ids":
+        los_gehts = solve_DFS(start_city,end_city, routing_algorithm)
+    elif routing_algorithm == "uniform":
+        los_gehts = solve_Uniform(start_city,end_city, cost_function)
+    else:
+        los_gehts = "Valid routing_algorithm not found. Only 'bfs', 'dfs', 'ids', 'uniform', and 'astar' are accepted. Please check your input for any potential errors."
+else:
+    los_gehts = "Valid cost_function not found.  Only 'segments', 'distance', and 'time' are accepted.  Please check your input for any potential errors."
 
 print los_gehts if los_gehts else "Sorry, no solution found. :("
