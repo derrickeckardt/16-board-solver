@@ -21,6 +21,7 @@
 # Import libraries
 import sys
 import pandas as pd
+from operator import itemgetter
 
 # Import command Prompt Values
 start_city = sys.argv[1]
@@ -46,7 +47,7 @@ def solve_BFS(start_city,end_city):
         for city, distance, time in successors( current_city):
             # Check to see if city has not been visited already on this route
             # if so, we've backtracked, and will move on to the next successor.
-            if (","+city+",") not in route_so_far:
+            if (city+",") not in route_so_far:
                 if city==end_city:
                     return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
                 fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ","])
@@ -77,7 +78,7 @@ def solve_DFS(start_city,end_city,routing_algorithm):
             for city, distance, time in successors( current_city):
                 # Check to see if city has not been visited already on this route
                 # if so, we've backtracked, and will move on to the next successor.
-                if (","+city+",") not in route_so_far:
+                if (city+",") not in route_so_far:
                     if city==end_city:
                         return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
                     if depth_so_far+1 != i: # 
@@ -96,15 +97,32 @@ def solve_DFS(start_city,end_city,routing_algorithm):
 def solve_Uniform(start_city,end_city, cost_function):
     print 'Solving with Uniform Cost with a cost function of ' +cost_function + '...'
     fringe = [[start_city, 0, 0, str(start_city)+","]]
+    goal_time = 1000000
+    goal_distance = 1000000
+    if cost_function == "distance":
+        cost_column = 1
+    elif cost_function == "time":
+        cost_column = 2
     while len(fringe) > 0:
+        # Learned how to sort list of list from, and then applied it to my case
+        # https://stackoverflow.com/questions/5201191/method-to-sort-a-list-of-lists
+        fringe = sorted(fringe, key=itemgetter(cost_column))
+        #print fringe
         [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop(0)
+#        print distance_so_far, " ",goal_distance, " | ", time_so_far, " ", goal_time
+        if (goal_time < time_so_far and cost_column == 2) or (goal_distance < distance_so_far and cost_column ==1):
+            return str(goal_distance) + " " + str(goal_time) + " " + goal_route
         for city, distance, time in successors( current_city):
             # Check to see if city has not been visited already on this route
             # if so, we've backtracked, and will move on to the next successor.
-            if (","+city+",") not in route_so_far:
-                if city==end_city:
-                    return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
-                fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ","])
+            if (city+",") not in route_so_far:
+                if city==end_city and ((goal_time > time_so_far + time and cost_column == 2) or (goal_distance > distance_so_far + distance and cost_column ==1)):
+                    goal_distance = distance_so_far + distance
+                    goal_time = time_so_far + time
+                    goal_route = route_so_far + city
+#                    print "GOAL: "+str(goal_distance) + " " + str(goal_time) + " " + goal_route
+                else:
+                    fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ","])
     return False
 
 
