@@ -238,10 +238,10 @@ def solve(initial_board):
             print "route_so_far ", route_so_far 
         #heuristic_value, moves_so_far, i
         for (succ, move) in successors( state ):
-            if is_goal(succ):
-                print "Fringe.gets ",i
-                return( route_so_far + " " + move )
             if succ not in visited_states:
+                if is_goal(succ):
+                    print "Fringe.gets ",i
+                    return( route_so_far + " " + move )
                 fringe.put((heurisitic_eight(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
                 visited_states.append(succ)
         i += 1
