@@ -9,6 +9,7 @@ from random import randrange, sample
 import sys
 import string
 from operator import add
+from math import sqrt
 
 # shift a specified row left (-1) or right (1)
 def shift_row(state, row, dir):
@@ -58,6 +59,25 @@ def get_manhattan(current, goal):
             d_man_y= abs(goal_y - current_y)
         return d_man_x + d_man_y
 
+def get_manhattan_euclid(current, goal):
+    if current == goal:
+        return 0
+    else:
+        current_x,current_y = get_coordinates(current)
+        goal_x,goal_y = get_coordinates(goal)
+        if abs(goal_x - current_x) == 3:
+            d_man_x=1
+        else:
+            d_man_x= abs(goal_x - current_x)
+        if abs(goal_y - current_y) == 3:
+            d_man_y=1
+        else:
+            d_man_y= abs(goal_y - current_y)
+        return sqrt(d_man_x^2 + d_man_y^2)
+
+
+
+
 # check if we've reached the goal
 # Changed it to use the stock goal_state so that we did not have sort.  Performance savings.
 def is_goal(state):
@@ -103,7 +123,7 @@ def heurisitic_seven(state, goal_state):
     heur_seven_edges = float(sum(heur_seven_edges)) / 2.0
     heur_seven_middles = [get_manhattan(state[i-1],i) for i in middles]
     heur_seven_middles = float(sum(heur_seven_middles)) / 1.0
-    return max([heur_seven_corners,heur_seven_edges,heur_seven_middles])
+    return sqrt(max([heur_seven_corners,heur_seven_edges,heur_seven_middles]))
 
 # 
 def heurisitic_eight(state, goal_state):
@@ -122,6 +142,47 @@ def heurisitic_six(state, goal_state):
     #print heur_two
     return heur_two
 
+def heurisitic_nine(state, goal_state):
+    heur_one = float(sum(([1 if state[i-1] != goal_state[i-1] else 0 for i in state ])))
+    return heurisitic_eight(state, goal_state) / heur_one
+
+def heurisitic_ten(state, goal_state):
+    heur_seven_interim = [get_manhattan_euclid(state[i-1],i) for i in goal_state]
+    heur_seven = float(sum(heur_seven_interim)) / 2.0
+    return heur_seven
+
+# Trying whole new tact.  We will count the number of rows that do not have the 3 or 4 
+# of the correct tiles in them.  Right before a final stage, it will have 4 rows of
+# 3 out of 4 and 4 rows out of 4 with the right configuration.  Should also be
+# admissable since when we are two 
+
+# Look for number of pairs that are in the correct order (1,2),(2,3) (3,4) (4,1)
+def heurisitic_eleven(state,goal_state):
+    pairs_in_order = 0
+    for j in range (0,16,4):
+        for i in range(0+j,3+j):
+            if state[i] != state[i+1] - 1:
+                pairs_in_order += 1
+    # Checking wrap around
+        if state[j] != state[j+3] + 1:
+            pairs_in_order += 1
+    return float(pairs_in_order)/1.0
+
+# Look for number of vertical pairs, and then take the max
+# of this or heuristic_eleven
+def heurisitic_twelve(state,goal_state):
+    pairs_in_order = 0
+    for j in range (0,12,4):
+        for i in range(0+j,4+j):
+            if state[i] != state[i+4] - 4:
+                pairs_in_order += 1
+    # Checking wrap around
+    for j in range (12,16):
+        if state[j] != state[j-12] - 4:
+            pairs_in_order += 1
+    return max([float(pairs_in_order),heurisitic_eleven(state,goal_state),heurisitic_eight(state,goal_state)])/1.0
+    
+    
 
 # Heuristic Function 3: shortest, longest distance from origin
 # Initially thought this might be a good heuristic, as it would prefer the arrangement
@@ -163,22 +224,22 @@ def heurisitic_five(state, goal_state):
 # The solver! - using BFS right now
 def solve(initial_board):
     fringe = PriorityQueue()
-    fringe.put((heurisitic_seven(initial_board,goal_state),[(initial_board),"",0]))
+    fringe.put((heurisitic_twelve(initial_board,goal_state),[(initial_board),"",0]))
     i = 1
     while not fringe.empty() > 0:
-        (heuristic_value, fringeitem) = fringe.get()
+        (heurisitic_value, fringeitem) = fringe.get()
         [state, route_so_far,moves_so_far] = fringeitem
         # if i%10000 == 0:
         #     print "state ", state
-        #     print "heuristic value ", heuristic_value
-        #     print "heuristic value ", heurisitic_seven(state,goal_state) ," + ",moves_so_far
+        #     print "heuristic value ", heurisitic_value
+        #     print "heuristic value ", heurisitic_twelve(state,goal_state) ," + ",moves_so_far
         #     print "route_so_far ", route_so_far 
         #heuristic_value, moves_so_far, i
         for (succ, move) in successors( state ):
             if is_goal(succ):
                 print "Fringe.gets ",i
                 return( route_so_far + " " + move )
-            fringe.put((heurisitic_seven(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
+            fringe.put((heurisitic_twelve(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
         i += 1
     return False
 
