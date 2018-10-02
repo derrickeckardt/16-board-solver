@@ -42,9 +42,8 @@ n = int(sys.argv[4])
 # Define some functions
 # Score the group
 def score_group(group,m,n):
-    # this would be calculated each time someone is added to a group and kept with the group
+    # this would be calculated each time someone is added to a group
     # Group structure should be [name, name, name]
-    # calculate 1-minute upsets for wrong group size
     wrong_size = 0
     m_size = 0
     n_size = 0
@@ -59,17 +58,15 @@ def score_group(group,m,n):
         # calculate n for minutes assigned to group for each friend that is not assigned
         friends = c_l[c_l['student'] == each]["friends"].values[0].split(",")
         n_size += sum([n if friend not in group and friend != "_" else 0 for friend in friends])
-
     return wrong_size + m_size + n_size
     
 def score_all(groups, k,m,n):
-    all_scores = sum(score_group(each,m,n) for each in groups)
     # this would be used to describe each state
     # Sum all of the individual scores for each group
+    all_scores = sum(score_group(each,m,n) for each in groups)
     # calculate k for minutes for number of groups
-    # sum of all score groups plus k* groups
-    print len(groups)
     k_size = len(groups)*k
+    # sum of all score groups plus k* groups
     return all_scores + k_size
 
 # Given the scoring factors, there are somethings I can do to help myself, by
@@ -109,6 +106,3 @@ c_l = pd.read_csv(input_file, delimiter=" ",header=None,names=['student','pref',
 # Next Step - Create Initial State
 groups  = [[each] for each in c_l['student']]
 initial_groups = [groups,score_all(groups,k,m,n)]
-print initial_groups
-
-print c_l
