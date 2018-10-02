@@ -230,12 +230,12 @@ def solve(initial_board):
     while not fringe.empty() > 0:
         (heurisitic_value, fringeitem) = fringe.get()
         [state, route_so_far,moves_so_far] = fringeitem
-        if i%1000 == 0:
-            print "i ",i
-            print "state ", state
-            print "heuristic value ", heurisitic_value
-            print "heuristic value ", heurisitic_twelve(state,goal_state) ," + ",moves_so_far
-            print "route_so_far ", route_so_far 
+        # if i%1000 == 0:
+        #     print "i ",i
+        #     print "state ", state
+        #     print "heuristic value ", heurisitic_value
+        #     print "heuristic value ", heurisitic_twelve(state,goal_state) ," + ",moves_so_far
+        #     print "route_so_far ", route_so_far 
         #heuristic_value, moves_so_far, i
         for (succ, move) in successors( state ):
             if succ not in visited_states:
