@@ -38,7 +38,7 @@ def successors(start_city):
 # Solve BFS Function
 def solve_BFS(start_city,end_city):
     print 'Solving with BFS...'
-    fringe = [[start_city, 0, 0, str(start_city)+","]]
+    fringe = [[start_city, 0, 0, str(start_city)+" "]]
     while len(fringe) > 0:
         [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop(0)
         for city, distance, time in successors( current_city):
@@ -47,7 +47,7 @@ def solve_BFS(start_city,end_city):
             if (city+",") not in route_so_far:
                 if city==end_city:
                     return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
-                fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ","])
+                fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " "])
     return False
 
 # Solve DFS Function
@@ -69,18 +69,18 @@ def solve_DFS(start_city,end_city,routing_algorithm):
         start_depth = 1
     for i in range(start_depth,1000001):
         # print "depth = ",i
-        fringe = [[start_city, 0, 0, str(start_city)+",",0]]
+        fringe = [[start_city, 0, 0, str(start_city)+" ",0]]
         while len(fringe) > 0:
             [current_city, distance_so_far, time_so_far, route_so_far,depth_so_far] = fringe.pop()
             for city, distance, time in successors( current_city):
                 # Check to see if city has not been visited already on this route
                 # if so, we've backtracked, and will move on to the next successor.
-                if (city+",") not in route_so_far:
+                if (city+" ") not in route_so_far:
                     if city==end_city:
                         return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
                     if depth_so_far+1 != i: # 
                         # print "Depth ",depth_so_far+1
-                        fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ",",depth_so_far+1])
+                        fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " ",depth_so_far+1])
     return False
 
 # DFS can't get anything in reasonable amount of time.  With 12000 road segments,

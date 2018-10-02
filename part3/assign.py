@@ -15,18 +15,16 @@
 #
 # In general, think of this as a search problem.
 # 
-# Initial State: A blank list of groups
+# Initial State: Each individual is there own group
 # 
-# Goal State: All students assigned to a group
+# Goal State: Students organized into groups that minimize faculty time.
 #
-# Successor: Adding one individual to an existing group or into a new group.  So, 
-#    for each next state, we would have all the remaining individuals yet to be assigned.
+# Successor: Take one group and combine it into the others. Score it, and then place
+# into priority queue
 #
-# Heurestic Function: Summing the total amount of time that it would take
+# Heurestic Function: Summing the total amount of time that it would take.
 #
-# Cost function: Everytime we add someone on, it will change the amount of time
-#     which will increase the amount of time.  The perfect add would decrease
-#     the time spent.
+# Cost function: Everytime we merge groups, it will change the cost to the faculty
 
 
 print "Oy, vey."
@@ -37,26 +35,42 @@ import sys
 
 # Get command line inputs
 input_file = sys.argv[1]
-k = sys.argv[2]
-m = sys.argv[3]
-n = sys.argv[4]
+k = int(sys.argv[2])
+m = int(sys.argv[3])
+n = int(sys.argv[4])
 
 # Define some functions
 # Score the group
-def score_group(group):
+def score_group(group,m,n):
     # this would be calculated each time someone is added to a group and kept with the group
-    # Group structure should be [name, name, name, int(score)]
+    # Group structure should be [name, name, name]
     # calculate 1-minute upsets for wrong group size
-    # calculate m for minutes assigned to group for each enemy that is assigned
-    # calculate n for minutes assigned to group for each friend that is not assigned
-    return 0
+    wrong_size = 0
+    m_size = 0
+    n_size = 0
+    for each in group:
+        # calculate minutes spent dealing with complaints about group size
+        if c_l[c_l['student'] == each]["pref"].values[0] != len(group) and c_l[c_l['student'] == each]["pref"].values[0] != 0:
+            wrong_size +=1
+        # calculate m for minutes assigned to group for each enemy that is assigned
+        enemies = c_l[c_l['student'] == each]["enemies"].values[0].split(",")
+        m_size += sum([m if enemy in group else 0 for enemy in enemies])
+
+        # calculate n for minutes assigned to group for each friend that is not assigned
+        friends = c_l[c_l['student'] == each]["friends"].values[0].split(",")
+        n_size += sum([n if friend not in group and friend != "_" else 0 for friend in friends])
+
+    return wrong_size + m_size + n_size
     
-def score_all(groups):
+def score_all(groups, k,m,n):
+    all_scores = sum(score_group(each,m,n) for each in groups)
     # this would be used to describe each state
     # Sum all of the individual scores for each group
     # calculate k for minutes for number of groups
     # sum of all score groups plus k* groups
-    return 0
+    print len(groups)
+    k_size = len(groups)*k
+    return all_scores + k_size
 
 # Given the scoring factors, there are somethings I can do to help myself, by
 # simplifying the initial state.  Students have already done some work to make
@@ -90,8 +104,11 @@ def score_all(groups):
 # https://gist.github.com/jonathanbranam/c2b121237d1954c574b0a2bbc075e662
 
 # Step Zero - Read in the datafile as a list of list
-class_list = pd.read_csv(input_file, delimiter=" ",header=None,names=['student','pref','friends','enemies'])
+c_l = pd.read_csv(input_file, delimiter=" ",header=None,names=['student','pref','friends','enemies'])
 
-#print class_list 
-# Next Step - 
+# Next Step - Create Initial State
+groups  = [[each] for each in c_l['student']]
+initial_groups = [groups,score_all(groups,k,m,n)]
+print initial_groups
 
+print c_l
