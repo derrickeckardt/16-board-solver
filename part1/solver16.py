@@ -180,7 +180,7 @@ def heurisitic_twelve(state,goal_state):
     for j in range (12,16):
         if state[j] != state[j-12] - 4:
             pairs_in_order += 1
-    return max([float(pairs_in_order),heurisitic_eleven(state,goal_state),heurisitic_eight(state,goal_state)])/1.0
+    return min([float(pairs_in_order),heurisitic_eleven(state,goal_state),heurisitic_eight(state,goal_state)])/1.0
     
     
 
