@@ -23,7 +23,7 @@ We must find an algorithm using heuristic to put them in order from 1 to 16.  We
 
 *Goal State*: A 4 by 4 board with the 16 tiles arranged numberically, like so:
 
-''' python
+'''python
 1  2  3  4
 5  6  7  8
 9  10 11 12
