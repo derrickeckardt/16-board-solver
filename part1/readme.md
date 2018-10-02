@@ -32,4 +32,6 @@ We must find an algorithm using heuristic to put them in order from 1 to 16.  We
 
 **Cost Function**:  No move is more expensive than any other move.  Each move will shift four tiles one square.
 
-**Heuristic Function**: This was by far the most challenging part of this part of the assignment.  
+**Heuristic Function**: This was by far the most challenging part of this part of the assignment.  In fact, it deserves its own discussion below.
+
+**Algorithm**:
