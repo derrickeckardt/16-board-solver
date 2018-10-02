@@ -85,7 +85,7 @@ def solve_DFS(start_city,end_city,routing_algorithm):
 
 # DFS can't get anything in reasonable amount of time.  With 12000 road segments,
 # it's really easy for the it to take a route away from the segment, and just keep
-# moving around.  IDS helps brings tames that, and makes it much easier to actually
+# moving around.  IDS helps brings tames thafot, and makes it much easier to actually
 # find something.  DFS is suboptimal, but it runs much faster than BFS in most cases
 # since it saves on the amount of states it saves in the fringe.
 

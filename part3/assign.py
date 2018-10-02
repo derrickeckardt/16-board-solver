@@ -32,13 +32,10 @@
 # our best to date, which we will traffic.
 # 
 
-
-
-print "Oy, vey."
-
 # Import library
 import pandas as pd
 import sys
+from operator import itemgetter
 
 # Get command line inputs
 input_file = sys.argv[1]
@@ -100,9 +97,39 @@ def successors(groups):
                     successor_set.append([new_groups,score_all(new_groups,k,m,n)])
     return successor_set
             
+def solve(initial_groups):
+    all_scores = []
+    best_groups = initial_groups[0] * 1
+    best_score = initial_groups[1] * 1
+    fringe = [initial_groups * 1]
+    print "Welcome to the GroupAssign 3000"
+    print "Sorting "+str(len(initial_groups[0]))+" students into groups.  Optimizing for time."
+    i = 1
+    while len(fringe) > 0:
+        # Creates a priority queue
+        fringe = sorted(fringe,key=itemgetter(1))
+        for groups, score in successors(fringe.pop(0)):
+            if score < best_score:
+                best_groups = groups *1
+                best_score = score
+            fringe.append([groups,score])
+            # Add a differentiator later to throw out bad values
+            all_scores.append(best_score)
+            i += 1
+            if i%1000==0:
+                print i," states evaluated"
+                print min(all_scores)
+    print i," states evaluated"
+    print min(all_scores)
+
+    return best_groups, best_score
     
-
-
+def print_groups(groups):
+    for each in groups:
+        line = ""
+        for student in each:
+            line += student + " "
+        print line.strip()
 
 # Given the scoring factors, there are somethings I can do to help myself, by
 # simplifying the initial state.  Students have already done some work to make
@@ -141,7 +168,7 @@ c_l = pd.read_csv(input_file, delimiter=" ",header=None,names=['student','pref',
 # Next Step - Create Initial State
 groups  = [[each] for each in c_l['student']]
 initial_groups = [groups,score_all(groups,k,m,n)]
-first_successors = successors(initial_groups)
-second_successors = successors(first_successors[0])
-third_successors = successors(second_successors[0])
-print third_successors
+
+best_groups, best_score = solve(initial_groups)
+print print_groups(best_groups)
+print best_score
