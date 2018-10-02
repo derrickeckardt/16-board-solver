@@ -111,7 +111,7 @@ def solve_Uniform(start_city,end_city, cost_function):
         [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop(0)
         # print distance_so_far, " ",goal_distance, " | ", time_so_far, " ", goal_time
         if (goal_time < time_so_far and cost_column == 2) or (goal_distance < distance_so_far and cost_column ==1):
-            return str(goal_distance) + " " + str(goal_time) + " " + goal_route
+            return "yes "+str(goal_distance) + " " + str(goal_time) + " " + goal_route
         for city, distance, time in successors( current_city):
             # Check to see if city has not been visited already on this route
             # if so, we've backtracked, and will move on to the next successor.

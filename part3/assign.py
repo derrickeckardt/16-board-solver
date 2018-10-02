@@ -49,12 +49,14 @@ def score_group(group):
     # calculate 1-minute upsets for wrong group size
     # calculate m for minutes assigned to group for each enemy that is assigned
     # calculate n for minutes assigned to group for each friend that is not assigned
+    return 0
     
 def score_all(groups):
     # this would be used to describe each state
     # Sum all of the individual scores for each group
     # calculate k for minutes for number of groups
     # sum of all score groups plus k* groups
+    return 0
 
 # Given the scoring factors, there are somethings I can do to help myself, by
 # simplifying the initial state.  Students have already done some work to make
