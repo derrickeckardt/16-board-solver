@@ -22,9 +22,16 @@
 # Successor: Take one group and combine it into the others. Score it, and then place
 # into priority queue
 #
-# Heurestic Function: Summing the total amount of time that it would take.
+# Heurestic Function: Summing the total amount of time that it would take.  What is interesting is
+# that we are looking for a minimum.
 #
 # Cost function: Everytime we merge groups, it will change the cost to the faculty
+#
+# Assumption for large classes ,the amount of version of groups is very high, so will start with our initial
+# groups, and then as we prune, ignore groupings that as we combine them are worse than 
+# our best to date, which we will traffic.
+# 
+
 
 
 print "Oy, vey."
@@ -62,12 +69,42 @@ def score_group(group,m,n):
     
 def score_all(groups, k,m,n):
     # this would be used to describe each state
+    # we know the theoretical minimum value of this function is class_size / 3 * k.
+    # of course, we know that has everyone in groups of 3.
     # Sum all of the individual scores for each group
     all_scores = sum(score_group(each,m,n) for each in groups)
     # calculate k for minutes for number of groups
     k_size = len(groups)*k
     # sum of all score groups plus k* groups
     return all_scores + k_size
+
+def successors(groups):
+    #copy current group
+    # will make one change.
+    # we will take each
+    successor_set = []
+    groups_iter = groups[0] * 1
+    for group in groups_iter:
+        groups_remaining_subset = groups[0][groups[0].index(group)+1:len(groups[0])] * 1
+        # if already a group of 3, can't make a new state with it
+        if len(group) < 3:
+            for next_group in groups_remaining_subset:
+                if len(next_group) +len(group) <=3:
+                    new_groups = groups[0] * 1
+                    # create a merged group
+                    new_groups.append(group+next_group)
+                    # delete the previous two individual groups
+                    print group + next_group
+
+                    new_groups.remove(group)
+                    new_groups.remove(next_group)
+                    successor_set.append([new_groups,score_all(new_groups,k,m,n)])
+                    print successor_set
+    return successor_set
+            
+    
+
+
 
 # Given the scoring factors, there are somethings I can do to help myself, by
 # simplifying the initial state.  Students have already done some work to make
@@ -106,3 +143,5 @@ c_l = pd.read_csv(input_file, delimiter=" ",header=None,names=['student','pref',
 # Next Step - Create Initial State
 groups  = [[each] for each in c_l['student']]
 initial_groups = [groups,score_all(groups,k,m,n)]
+print initial_groups
+print successors(initial_groups)
