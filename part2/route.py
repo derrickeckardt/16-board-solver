@@ -92,7 +92,7 @@ def solve_DFS(start_city,end_city,routing_algorithm):
 # Solve Uniform Cost
 def solve_Uniform(start_city,end_city, cost_function):
     print 'Solving with Uniform Cost with a cost function of ' +cost_function + '...'
-    fringe = [[start_city, 0, 0, str(start_city)+","]]
+    fringe = [[start_city, 0, 0, str(start_city)+" "]]
     goal_time = 1000000
     goal_distance = 1000000
     goal_route = ""
@@ -115,14 +115,14 @@ def solve_Uniform(start_city,end_city, cost_function):
         for city, distance, time in successors( current_city):
             # Check to see if city has not been visited already on this route
             # if so, we've backtracked, and will move on to the next successor.
-            if (city+",") not in route_so_far:
+            if (city+" ") not in route_so_far:
                 if city==end_city and ((goal_time > time_so_far + time and cost_column == 2) or (goal_distance > distance_so_far + distance and cost_column ==1)):
                     goal_distance = distance_so_far + distance
                     goal_time = time_so_far + time
                     goal_route = route_so_far + city
 #                    print "GOAL: "+str(goal_distance) + " " + str(goal_time) + " " + goal_route
                 else:
-                    fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + ","])
+                    fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " "])
     return False
 
 
