@@ -1,6 +1,6 @@
 # CS B551 - Assignment 1: Searching
 
-Completed by Derrick Eckardt
+Completed by Derrick Eckardt on October 2, 2018.  Please direct any questions to [derrick@iu.edu](mailto:derrick@iu.edu)
 
 ## Part 0: Getting Started
 
@@ -10,12 +10,18 @@ Completed!  I successfully cloned the repository into my local environment.  The
 
 A full discussion and details can be found in the Readme file for Part 1, which is located at:
 
-[Part 1 Readme File]()
+[Part 1 Readme File](https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part1)
+
 
 ## Part 2: Road Trip!
 
-TBD
+A full discussion and details can be found in the Readme file for Part 1, which is located at:
+
+[Part 2 Readme File](https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part2)
+
 
 ## Part 3: Group Assignments
 
-TBD
+A full discussion and details can be found in the Readme file for Part 3, which is located at:
+
+[Part 3 Readme File](https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part3)
