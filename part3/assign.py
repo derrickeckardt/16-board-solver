@@ -90,16 +90,14 @@ def successors(groups):
         if len(group) < 3:
             for next_group in groups_remaining_subset:
                 if len(next_group) +len(group) <=3:
+                    # copy the original group
                     new_groups = groups[0] * 1
                     # create a merged group
                     new_groups.append(group+next_group)
                     # delete the previous two individual groups
-                    print group + next_group
-
                     new_groups.remove(group)
                     new_groups.remove(next_group)
                     successor_set.append([new_groups,score_all(new_groups,k,m,n)])
-                    print successor_set
     return successor_set
             
     
@@ -143,5 +141,7 @@ c_l = pd.read_csv(input_file, delimiter=" ",header=None,names=['student','pref',
 # Next Step - Create Initial State
 groups  = [[each] for each in c_l['student']]
 initial_groups = [groups,score_all(groups,k,m,n)]
-print initial_groups
-print successors(initial_groups)
+first_successors = successors(initial_groups)
+second_successors = successors(first_successors[0])
+third_successors = successors(second_successors[0])
+print third_successors
