@@ -135,7 +135,9 @@ def print_groups(groups):
         line = ""
         for student in each:
             line += student + " "
-        print line.strip()
+        line=line.strip()
+        print line
+    return None
 
 # Given the scoring factors, there are somethings I can do to help myself, by
 # simplifying the initial state.  Students have already done some work to make
@@ -181,5 +183,5 @@ initial_groups = [groups,score_all(groups,k,m,n)]
 best_groups, best_score = solve(initial_groups)
 
 # Prinout results
-print print_groups(best_groups)
+print_groups(best_groups)
 print best_score
