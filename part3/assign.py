@@ -108,9 +108,9 @@ def solve(initial_groups):
     best_groups = initial_groups[0] * 1
     best_score = initial_groups[1] * 1
     fringe = [initial_groups * 1]
-    print "Welcome to the GroupAssign 3000"
-    print "Sorting "+str(len(initial_groups[0]))+" students into groups.  Optimizing for time."
-    i = 1
+    # print "Welcome to the GroupAssign 3000"
+    # print "Sorting "+str(len(initial_groups[0]))+" students into groups.  Optimizing for time."
+    # i = 1
     while len(fringe) > 0:
         # Creates a priority queue
         fringe = sorted(fringe,key=itemgetter(1))
@@ -118,16 +118,16 @@ def solve(initial_groups):
             if score < best_score:
                 best_groups = groups *1
                 best_score = score
-                worst_acceptable_score = float(best_score)*max_buff
-            if score < worst_acceptable_score:
-                fringe.append([groups,score])
+                #worst_acceptable_score = float(best_score)*max_buff
+            #if score < worst_acceptable_score:
+            fringe.append([groups,score])
             # Add a differentiator later to throw out bad values
-            i += 1
-            if i%1000==0:
-                print i," states evaluated so far"
-                print "Best Score: ", best_score
-                print "Fringe Size: ",len(fringe)
-    print i," states evaluated in total"
+    #         i += 1
+    #         if i%1000==0:
+    #             print i," states evaluated so far"
+    #             print "Best Score: ", best_score
+    #             print "Fringe Size: ",len(fringe)
+    # print i," states evaluated in total"
     return best_groups, best_score
     
 def print_groups(groups):
