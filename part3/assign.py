@@ -43,6 +43,13 @@ k = int(sys.argv[2])
 m = int(sys.argv[3])
 n = int(sys.argv[4])
 
+# Optional max consideration for new stages
+if len(sys.argv) == 6:
+    max_buff = 1+(float(sys.argv[5])/100)
+else:
+    # not capping it any useful way
+    max_buff = 10.0
+    
 # Define some functions
 # Score the group
 def score_group(group,m,n):
@@ -98,7 +105,6 @@ def successors(groups):
     return successor_set
             
 def solve(initial_groups):
-    all_scores = []
     best_groups = initial_groups[0] * 1
     best_score = initial_groups[1] * 1
     fringe = [initial_groups * 1]
@@ -112,16 +118,16 @@ def solve(initial_groups):
             if score < best_score:
                 best_groups = groups *1
                 best_score = score
-            fringe.append([groups,score])
+                worst_acceptable_score = float(best_score)*max_buff
+            if score < worst_acceptable_score:
+                fringe.append([groups,score])
             # Add a differentiator later to throw out bad values
-            all_scores.append(best_score)
             i += 1
             if i%1000==0:
-                print i," states evaluated"
-                print min(all_scores)
-    print i," states evaluated"
-    print min(all_scores)
-
+                print i," states evaluated so far"
+                print "Best Score: ", best_score
+                print "Fringe Size: ",len(fringe)
+    print i," states evaluated in total"
     return best_groups, best_score
     
 def print_groups(groups):
@@ -134,6 +140,8 @@ def print_groups(groups):
 # Given the scoring factors, there are somethings I can do to help myself, by
 # simplifying the initial state.  Students have already done some work to make
 # life easier on me
+#
+# future Performance enhancements - look for students that have self-selected themselves
 # 
 # First: Look for groups of 3 that self-selected themselves together.  ie, person A said 
 # they wanted B & C; B said they wanted A & c; C said they wanted A & B
@@ -169,6 +177,9 @@ c_l = pd.read_csv(input_file, delimiter=" ",header=None,names=['student','pref',
 groups  = [[each] for each in c_l['student']]
 initial_groups = [groups,score_all(groups,k,m,n)]
 
+# Time to Solve
 best_groups, best_score = solve(initial_groups)
+
+# Prinout results
 print print_groups(best_groups)
 print best_score
