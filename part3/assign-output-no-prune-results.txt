@@ -81,3 +81,44 @@ Sorting 50 students into groups.  Optimizing for time.
 284
 
 After two hours, 80000 states, still at 285
+
+Prune Results
+428000  states evaluated so far
+Best Score:  289
+Fringe Size:  11679
+429000  states evaluated so far
+Best Score:  289
+Fringe Size:  11676
+^CTraceback (most recent call last):
+  File "./assign.py", line 181, in <module>
+    
+  File "./assign.py", line 117, in solve
+    for groups, score in successors(fringe.pop(0)):
+  File "./assign.py", line 104, in successors
+    successor_set.append([new_groups,score_all(new_groups,k,m,n)])
+  File "./assign.py", line 79, in score_all
+    all_scores = sum(score_group(each,m,n) for each in groups)
+  File "./assign.py", line 79, in <genexpr>
+    all_scores = sum(score_group(each,m,n) for each in groups)
+  File "./assign.py", line 63, in score_group
+    if c_l[c_l['student'] == each]["pref"].values[0] != len(group) and c_l[c_l['student'] == each]["pref"].values[0] != 0:
+  File "/usr/lib64/python2.7/site-packages/pandas/core/frame.py", line 1963, in __getitem__
+    return self._getitem_array(key)
+  File "/usr/lib64/python2.7/site-packages/pandas/core/frame.py", line 2005, in _getitem_array
+    return self.take(indexer, axis=0, convert=False)
+  File "/usr/lib64/python2.7/site-packages/pandas/core/generic.py", line 1371, in take
+    convert=True, verify=True)
+  File "/usr/lib64/python2.7/site-packages/pandas/core/internals.py", line 3626, in take
+    new_labels = self.axes[axis].take(indexer)
+  File "/usr/lib64/python2.7/site-packages/pandas/core/index.py", line 1239, in take
+    return self._shallow_copy(taken)
+  File "/usr/lib64/python2.7/site-packages/pandas/core/index.py", line 391, in _shallow_copy
+    attributes = self._get_attributes_dict()
+  File "/usr/lib64/python2.7/site-packages/pandas/core/index.py", line 361, in _get_attributes_dict
+    return dict([ (k,getattr(self,k,None)) for k in self._attributes])
+KeyboardInterrupt
+
+real    588m59.112s
+user    588m58.727s
+sys     0m1.599s
+[derrick@silo part3]$ 
