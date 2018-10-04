@@ -22,6 +22,7 @@
 import sys
 import pandas as pd
 from operator import itemgetter
+import math
 
 # Import command Prompt Values
 start_city = sys.argv[1]
@@ -125,10 +126,58 @@ def solve_Uniform(start_city,end_city, cost_function):
                     fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " "])
     return False
 
+# Heuristic Function - Halversine Distance
+# Since this is a known calculation, updated code from the following for htis purpose:
+# https://gist.github.com/rochacbruno/2883505
+# Github gists are available with the above attribution.
+#
+# If I complete cotnrol over environment, would use the Halverson library available
+# through Pypi
+def heuristic_halversine(start_city, end_city):
+    lat1, lon1 = cs[cs['city'] == start_city].values[0][1:3]
+    lat2, lon2 = cs[cs['city'] == end_city].values[0][1:3]
+    radius = 3959 # miles
+
+    dlat = math.radians(lat2-lat1)
+    dlon = math.radians(lon2-lon1)
+    a = math.sin(dlat/2) * math.sin(dlat/2) + math.cos(math.radians(lat1)) \
+        * math.cos(math.radians(lat2)) * math.sin(dlon/2) * math.sin(dlon/2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    d = radius * c
+
+    return d
+
 
 # Solve A*
-# heuristic = euclidian distance
-
+def solve_Astar(start_city,end_city,cost_function):
+    print 'Solving with Uniform Cost with a cost function of ' +cost_function + '...'
+    fringe = [heuristic_halversine(start_city,end_city), [start_city, 0, 0, str(start_city)+" "]]
+    visited_segments =[]
+    print fringe    
+    i = 1
+    while not fringe.empty() > 0:
+        (heurisitic_value, fringeitem) = fringe.pop(0)
+        [current_city, route_so_far,moves_so_far] = fringeitem
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        for city, distance, time in successors( current_city):
+            if succ not in visited_states:
+                if is_goal(succ):
+                    print "Fringe.gets ",i
+                    return( route_so_far + " " + move )
+                fringe.put((heurisitic_eight(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
+                visited_states.append(succ)
+        i += 1
+    return False
 
 
 # import roads segments as rs
@@ -176,7 +225,9 @@ rs['time'] = rs.length / rs.speed_limit
 ##############################################################
 
 if cost_function == "segments" or cost_function== "distance" or cost_function == "time":
-    if routing_algorithm == "bfs":     
+    if start_city not in cs['city'].values.tolist() or end_city not in cs['city'].values.tolist():
+        los_gehts = "'start_city' or 'end_city' is not in city-gps.txt.  Please check your input for any potential errors."
+    elif routing_algorithm == "bfs":     
         los_gehts = solve_BFS(start_city,end_city)
     elif routing_algorithm == "dfs":
         los_gehts = solve_DFS(start_city,end_city, routing_algorithm)
@@ -184,6 +235,8 @@ if cost_function == "segments" or cost_function== "distance" or cost_function ==
         los_gehts = solve_DFS(start_city,end_city, routing_algorithm)
     elif routing_algorithm == "uniform":
         los_gehts = solve_Uniform(start_city,end_city, cost_function)
+    elif routing_algorithm == "astar":
+        los_gehts = solve_Astar(start_city,end_city, cost_function)
     else:
         los_gehts = "Valid routing_algorithm not found. Only 'bfs', 'dfs', 'ids', 'uniform', and 'astar' are accepted. Please check your input for any potential errors."
 else:
