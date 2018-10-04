@@ -126,16 +126,16 @@ def solve_Uniform(start_city,end_city, cost_function):
                     fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " "])
     return False
 
-# Heuristic Function - Halversine Distance
+# Halversine Distance = Basis of heuristic
 # The straight line distance between two cities is the heuristic of choice.
 # Since the Earth is curved, will use a haversine distance, as opposed the euclidian distance.
 # Since this is a known calculation, updated code from the following for htis purpose:
 # https://gist.github.com/rochacbruno/2883505
 # Github gists are available with the above attribution.
 #
-# If I complete cotnrol over environment, would use the Halverson library available
-# through Pypi
-def heuristic_halversine(start_city, end_city):
+# If I had complete cotnrol over python environment, we could use the Halverson library available
+# through PyPi, which is not a standard library.
+def halversine(start_city, end_city):
     lat1, lon1 = cs[cs['city'] == start_city].values[0][1:3]
     lat2, lon2 = cs[cs['city'] == end_city].values[0][1:3]
     radius = 3959 # miles
@@ -149,38 +149,61 @@ def heuristic_halversine(start_city, end_city):
 
     return d
 
-def heuristic_halversine_time(start_city,end_city):
+# Heuristic Function - Halversine Distance
+def heuristic(start_city, end_city, prev_heur, delta):
+    # If the road segment city is not in city_gps, will estimate the heuristics by taking the previous heuristic value and subtracting the road length
+    # This could result in some oddities such as a "negative" heuristic. This will be corrected once the route comes across a city that is in city_segments
+    # This keeps our heuristic admissable since it will be underestimating our true value.
+    # We will initialize our heuristic for our fringe value by putting a prev_heur of 1000000 which will be corrected to
+    # A realistic value once an actual city is found in the event the actual starting city's 
+    # lat and long is not known.
+    if cost_function == "distance":
+        if start_city in cs['city'].values.tolist():
+            # If the road segment city is in city-gps file, recalculate city
+            heur = halversine(start_city,end_city)
+        else:
+            heur = prev_heur - delta
+    elif cost_function == "time":
     # Distance is still the best heuristic, but since we want to optimize for time
-    # Will use find the distance and then fastest U.S. speed limit of 85mph to
-    # keep it admissable
-    time = float(heuristic_halversine(start_city,end_city))
-    return time/85.0
+    # Will find the heurisitc by using the distance and then dividing by the 
+    # fastest U.S. speed limit of 85mph to keep it admissable
+        if start_city in cs['city'].values.tolist():
+            heur = float(halversine(start_city,end_city))/65.0        
+        else:
+            heur = prev_heur - delta
+    elif cost_function == "segments":
+    # Similarily here, we will divide by the longest segment in our dataset (923 miles), which will make it admissable
+    # It will make our algorithm favor longer segments, which should result in fewer turns
+        if start_city in cs['city'].values.tolist():
+            heur = float(halversine(start_city,end_city))/923.0        
+        else:
+            heur = prev_heur - delta
+    return heur
+    
+
 
 # Solve A*
 def solve_Astar(start_city,end_city,cost_function):
-    fringe = [heuristic_halversine(start_city,end_city), [start_city, 0, 0, str(start_city)+" ",0]]
-    visited_segments =[]
+    fringe = [[heuristic(start_city,end_city,1000000,0), [start_city, 0, 0, str(start_city)+" ",0]]]
     i = 1
     while len(fringe) > 0:
-        print fringe
-        [heurisitic_value, fringeitem] = fringe.pop(0)
-        print heurisitic_value
-        print fringeitem
+        fringe = sorted(fringe, key=itemgetter(0))
+        heurisitic_value, fringeitem = fringe.pop(0)
+        # print heurisitic_value
+        # print fringeitem
         [current_city, distance_so_far, time_so_far, route_so_far,depth_so_far] = fringeitem
         for city, distance, time in successors(current_city):
             if (city+" ") not in route_so_far:
                 if city==end_city:
                     print "Fringe.gets ",i
                     return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
-                if city in cs['city'].values.tolist():
-                    # If the road segment city is in city-gps file, recalculate city
-                    fringe.append([heuristic_halversine(city,end_city),[city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " ",depth_so_far+1]])
+                if cost_function == "distance":
+                    delta = distance
+                elif cost_function == "time":
+                    delta = time
                 else:
-                    # If the road segment city is not in city_gps, will estimate the heuristics by taking the previous heuristic value and subtracting the road length
-                    # This could result in some oddities such as a "negative" heuristic. This will be corrected once the route comes across a city that is in city_segments
-                    # This keeps our heuristic admissable since it will be underestimating our heuristic.
-                    # Future improvement, move this logic into the heurestic function.  This keeps
-                    fringe.append([heurisitic_value-distance,[city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " ",depth_so_far+1]])
+                    delta = 1
+                fringe.append([heuristic(city,end_city,heurisitic_value,distance),[city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " ",depth_so_far+1]])
         i += 1
     return False
 
