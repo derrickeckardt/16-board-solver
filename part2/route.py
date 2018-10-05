@@ -39,6 +39,10 @@ def successors(start_city):
 # Solve BFS Function
 def solve_BFS(start_city,end_city):
     print 'Solving with BFS...'
+    if cost_function == "segments":
+        is_optimal = "yes"
+    else:
+        is_optimal = "no"
     fringe = [[start_city, 0, 0, str(start_city)+" "]]
     while len(fringe) > 0:
         [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop(0)
@@ -47,7 +51,7 @@ def solve_BFS(start_city,end_city):
             # if so, we've backtracked, and will move on to the next successor.
             if (city+",") not in route_so_far:
                 if city==end_city:
-                    return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
+                    return is_optimal + " "+str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
                 fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " "])
     return False
 
@@ -64,9 +68,14 @@ def solve_BFS(start_city,end_city):
 def solve_DFS(start_city,end_city,routing_algorithm):
     if routing_algorithm == "dfs":
         print "Solving with DFS..."
-        start_depth = 1000000 
+        start_depth = 1000000
+        is_optimal = "no"
     elif routing_algorithm == "ids":
         print "Solving with IDS..."
+        if cost_function == "segments":
+            is_optimal == "yes"
+        else:
+            is_optimal == "no"
         start_depth = 1
     for i in range(start_depth,1000001):
         # print "depth = ",i
@@ -78,7 +87,7 @@ def solve_DFS(start_city,end_city,routing_algorithm):
                 # if so, we've backtracked, and will move on to the next successor.
                 if (city+" ") not in route_so_far:
                     if city==end_city:
-                        return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
+                        return is_optimal + " "+ str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
                     if depth_so_far+1 != i: # 
                         # print "Depth ",depth_so_far+1
                         fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " ",depth_so_far+1])
@@ -112,7 +121,7 @@ def solve_Uniform(start_city,end_city, cost_function):
         [current_city, distance_so_far, time_so_far, route_so_far] = fringe.pop(0)
         # print distance_so_far, " ",goal_distance, " | ", time_so_far, " ", goal_time
         if (goal_time < time_so_far and cost_column == 2) or (goal_distance < distance_so_far and cost_column ==1):
-            return "yes "+str(goal_distance) + " " + str(goal_time) + " " + goal_route
+            return "yes "+str(goal_distance) + " " + str(goal_time) + " " + goal_route #Always optimal since we compare against other possibilities
         for city, distance, time in successors( current_city):
             # Check to see if city has not been visited already on this route
             # if so, we've backtracked, and will move on to the next successor.
@@ -150,6 +159,8 @@ def halversine(start_city, end_city):
     return d
 
 # Heuristic Function - Halversine Distance
+# By using the Havershine distance we get an admissable heuristic, and a consistent heuristic.
+# since it will not violate the triangle inequality.
 def heuristic(start_city, end_city, prev_heur, delta):
     # If the road segment city is not in city_gps, will estimate the heuristics by taking the previous heuristic value and subtracting the road length
     # This could result in some oddities such as a "negative" heuristic. This will be corrected once the route comes across a city that is in city_segments
@@ -182,28 +193,43 @@ def heuristic(start_city, end_city, prev_heur, delta):
     
 
 
-# Solve A*
+# Solve A* and Greedy Best-First
 def solve_Astar(start_city,end_city,cost_function):
+    if routing_algorithm == "astar":
+        print 'Solving with Uniform Cost with a cost function of ' +cost_function + '...'
+        is_optimal = "yes"
+    elif routing_algorithm == "greedy":
+        print 'Solving with Greedy Best First with a cost function of ' +cost_function + '...'
+        is_optimal = "no"
     fringe = [[heuristic(start_city,end_city,1000000,0), [start_city, 0, 0, str(start_city)+" ",0]]]
     i = 1
+    if cost_function == "distance":
+        cost_column = 1
+    elif cost_function == "time":
+        cost_column = 2
+    elif cost_function == "segments":
+        cost_column = 4
     while len(fringe) > 0:
         fringe = sorted(fringe, key=itemgetter(0))
         heurisitic_value, fringeitem = fringe.pop(0)
-        # print heurisitic_value
-        # print fringeitem
         [current_city, distance_so_far, time_so_far, route_so_far,depth_so_far] = fringeitem
         for city, distance, time in successors(current_city):
             if (city+" ") not in route_so_far:
                 if city==end_city:
                     print "Fringe.gets ",i
-                    return str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
+                    return is_optimal + " " +str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
                 if cost_function == "distance":
                     delta = distance
+                    travel_so_far = distance_so_far+distance
                 elif cost_function == "time":
                     delta = time
-                else:
+                    travel_so_far = time_so_far+time
+                elif cost_function =="segments":
                     delta = 1
-                fringe.append([heuristic(city,end_city,heurisitic_value,distance),[city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " ",depth_so_far+1]])
+                    travel_so_far = depth_so_far+1
+                if routing_algorithm == "greedy":
+                    travel_so_far = 0
+                fringe.append([heuristic(city,end_city,heurisitic_value,distance)+travel_so_far,[city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " ",depth_so_far+1]])
         i += 1
     return False
 
@@ -253,7 +279,7 @@ rs['time'] = rs.length / rs.speed_limit
 ##############################################################
 
 if cost_function == "segments" or cost_function== "distance" or cost_function == "time":
-    if start_city not in cs['city'].values.tolist() or end_city not in cs['city'].values.tolist():
+    if (start_city not in cs['city'].values.tolist() or end_city not in cs['city'].values.tolist()) and routing_algorithm != "astar":
         los_gehts = "'start_city' or 'end_city' is not in city-gps.txt.  Please check your input for any potential errors."
     elif routing_algorithm == "bfs":     
         los_gehts = solve_BFS(start_city,end_city)
@@ -264,6 +290,8 @@ if cost_function == "segments" or cost_function== "distance" or cost_function ==
     elif routing_algorithm == "uniform":
         los_gehts = solve_Uniform(start_city,end_city, cost_function)
     elif routing_algorithm == "astar":
+        los_gehts = solve_Astar(start_city,end_city, cost_function)
+    elif routing_algorithm == "greedy":
         los_gehts = solve_Astar(start_city,end_city, cost_function)
     else:
         los_gehts = "Valid routing_algorithm not found. Only 'bfs', 'dfs', 'ids', 'uniform', and 'astar' are accepted. Please check your input for any potential errors."
