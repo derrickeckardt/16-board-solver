@@ -33,11 +33,13 @@ Since I submitted it late, I did use the time to add some extra features and run
 A future improvement would be so you can also end in any route-segment.  Right now, you can only end in those listed in city-gps.txt
 
 **Part 3 -- Add pruning:** While right now, it will search the entire state space, for larger classes, we might want some pruning available.  By entering an aidditional argument, the user can set a threshold for how high a value.  For large classes, rejecting any state that increases estimated faculty time improves perfomance significantly, with only a small amount of suboptimality introduced.  See [Assignment 3 Read Me]((https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part3) for additional details.
-- 
-- Part 3 added the ability to set your own pruning
-- 
-- Part 3 Allows you to optimize for happy students instead of just time.
 
 ## Future considerations
 
 This could use serious refactoring.  I believe my code got better as I went along.  One thing I would change would be the use of dataframes.  I really didn't take advantage of it, and found working in lists much easier.  I should focus on one data handling method, instead going between the two of them in Parts 2 and 3.
+
+## Overal Thoughts
+
+This stuff is fun.  I have learned a lot, and going through the pain, I feel like I really understand not just the algorithms, but the concepts behind them.
+
+It's also really hard.
