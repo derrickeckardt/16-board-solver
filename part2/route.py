@@ -2,21 +2,17 @@
 # Indiana University Fall 2018 CSCI-B551 Elements of AI
 # Assignment 1, Part 2 - Road Trip
 #
-# As directed in the assignment, to run this program type the following at the command line:
-# ./route.py [start-city] [end-city] [routing-algorithm] [cost-function]
+###############################################################################
+###############################################################################
 #
-# where:
-# [start-city] and [end-city] are the cities we need a route between.
-# [routing-algorithm] is one of:
-# - bfs uses breadth-first search, which ignores edge weights in the state graph)
-# - uniform is uniform cost search (the variant of bfs that takes edge weights into consideration)
-# - dfs uses depth-first search
-# - ids uses iterative deepening search
-# - astar uses A* search, with a suitable heuristic function
-# [cost-function] is one of:
-# - segments tries to find a route with the fewest number of "turns" (i.e. edges of the graph)
-# - distance tries to find a route with the shortest total distance
-# - time tries to find the fastest route, for a car that always travels at the speed limit
+# A full discussion and details can be found in the Readme file for Part 2, 
+# which is located at:
+# https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part2
+#
+###############################################################################
+###############################################################################
+
+
 
 # Import libraries
 import sys
