@@ -12,8 +12,6 @@
 ###############################################################################
 ###############################################################################
 
-
-
 # Import libraries
 import sys
 import pandas as pd
@@ -45,7 +43,7 @@ def solve_BFS(start_city,end_city):
         for city, distance, time in successors( current_city):
             # Check to see if city has not been visited already on this route
             # if so, we've backtracked, and will move on to the next successor.
-            if (city+",") not in route_so_far:
+            if (city+" ") not in route_so_far:
                 if city==end_city:
                     return is_optimal + " "+str(distance_so_far+distance) + " " + str(time_so_far+time) + " " + route_so_far + city
                 fringe.append([city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " "])
@@ -157,8 +155,8 @@ def halversine(start_city, end_city):
 # Heuristic Function - Halversine Distance
 # By using the Havershine distance we get an admissable heuristic, and a consistent heuristic.
 # since it will not violate the triangle inequality.
-def heuristic(start_city, end_city, prev_heur, delta):
-    # If the road segment city is not in city_gps, will estimate the heuristics by taking the previous heuristic value and subtracting the road length
+def heuristic(start_city, end_city, prev_heur):
+    # If the road segment city is not in city_gps, will estimate the heuristics by taking the previous heuristic value.
     # This could result in some oddities such as a "negative" heuristic. This will be corrected once the route comes across a city that is in city_segments
     # This keeps our heuristic admissable since it will be underestimating our true value.
     # We will initialize our heuristic for our fringe value by putting a prev_heur of 1000000 which will be corrected to
@@ -169,7 +167,7 @@ def heuristic(start_city, end_city, prev_heur, delta):
             # If the road segment city is in city-gps file, recalculate city
             heur = halversine(start_city,end_city)
         else:
-            heur = prev_heur - delta
+            heur = prev_heur
     elif cost_function == "time":
     # Distance is still the best heuristic, but since we want to optimize for time
     # Will find the heurisitc by using the distance and then dividing by the 
@@ -177,14 +175,14 @@ def heuristic(start_city, end_city, prev_heur, delta):
         if start_city in cs['city'].values.tolist():
             heur = float(halversine(start_city,end_city))/65.0        
         else:
-            heur = prev_heur - delta
+            heur = prev_heur
     elif cost_function == "segments":
     # Similarily here, we will divide by the longest segment in our dataset (923 miles), which will make it admissable
     # It will make our algorithm favor longer segments, which should result in fewer turns
         if start_city in cs['city'].values.tolist():
             heur = float(halversine(start_city,end_city))/923.0        
         else:
-            heur = prev_heur - delta
+            heur = prev_heur
     return heur
     
 
@@ -197,7 +195,7 @@ def solve_Astar(start_city,end_city,cost_function):
     elif routing_algorithm == "greedy":
         print 'Solving with Greedy Best First with a cost function of ' +cost_function + '...'
         is_optimal = "no"
-    fringe = [[heuristic(start_city,end_city,1000000,0), [start_city, 0, 0, str(start_city)+" ",0]]]
+    fringe = [[heuristic(start_city,end_city,1000000), [start_city, 0, 0, str(start_city)+" ",0]]]
     i = 1
     if cost_function == "distance":
         cost_column = 1
@@ -225,7 +223,7 @@ def solve_Astar(start_city,end_city,cost_function):
                     travel_so_far = depth_so_far+1
                 if routing_algorithm == "greedy":
                     travel_so_far = 0
-                fringe.append([heuristic(city,end_city,heurisitic_value,distance)+travel_so_far,[city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " ",depth_so_far+1]])
+                fringe.append([heuristic(city,end_city,heurisitic_value)+travel_so_far,[city, distance_so_far+distance, time_so_far + time, route_so_far  + city + " ",depth_so_far+1]])
         i += 1
     return False
 
@@ -235,29 +233,6 @@ rs = pd.read_csv('road-segments.txt', delimiter=' ', header=None, names=['city1'
 
 # import city sements as cs
 cs = pd.read_csv('city-gps.txt', delimiter=' ', header=None, names=['city', 'latitude', 'longitude'])
-
-# Data needs some clean-up as it is not perfectly formed.  Playing around with it
-# in the Python console, in the road_segments date file, discovered there were two
-# kids of data that were problematic: NaN (null, missing) and  0.0.  There were 19 
-# instances where there was no speed limit, and 35 instances where the speed limit was 0.
-
-# Zero Speed Limit Cases:
-# The thing was most interesting is that the zero speed limit cases were federal
-# interstates.  In the past, we might have been able to assume a federal speed limit
-# of 55.  However, that is no longer valid as there is no longer a federal speed
-# limit, and each state derives its own speed limit.  Which can vary from 60mph to
-# 85 mph, which is a wide variance.  There are two options, we can assume a low speed
-# limit, such as the minimum, or bottom quartile value, which won't get anyone 
-# into too much trouble, or assume that road can't be  used and remove it from #
-# our dataset.  Opting to be conservative in our routining for the time option, 
-# I eliminated those 35 data points if time was entered as the prompt.  
-
-# Null speed limit cases:
-# In road segments data, there were 19 data points with a null value.  Again, we
-# don't know the values of these.  More so, these are principally located in
-# in Nova Scotia, which could have some very different speed limits due to the
-# cold, icy, remote nature of nova scotia.  For the sake of being conservative again
-# probably best to eliminate those data points as well.
 
 # Cleanup Road Segments data.  Eliminating 54 of 12000+ data points.  Adds a trivial
 # amount of suboptimality to the overall solution. 

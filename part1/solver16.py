@@ -11,7 +11,7 @@
 #
 ###############################################################################
 ###############################################################################
-# hit segmentation fault, which means th
+
 from Queue import PriorityQueue
 from random import randrange, sample
 import sys
@@ -83,9 +83,6 @@ def get_manhattan_euclid(current, goal):
             d_man_y= abs(goal_y - current_y)
         return sqrt(d_man_x^2 + d_man_y^2)
 
-
-
-
 # check if we've reached the goal
 # Changed it to use the stock goal_state so that we did not have sort.  Performance savings.
 def is_goal(state):
@@ -93,7 +90,7 @@ def is_goal(state):
 
 # Heuristic Function 1: Number of misplaced tiles
 # Worked well for board3,4, and 6. Stalled after board12
-def heurisitic_one(state, goal_state):
+def heuristic_one(state, goal_state):
     heur_one = sum(([1 if state[i-1] != goal_state[i-1] else 0 for i in state ]))
     return heur_one
 
@@ -101,14 +98,13 @@ def heurisitic_one(state, goal_state):
 # Best performance to date.  it worked under 0.2 s for up to board 8, which it did in 10 moves
 # however, ran for 10 minutes on board12 and would not compute a solution
 #in practice, i ended up calculating the difference between the title that is actually there, and what the value should be
-def heurisitic_two(state, goal_state):
+def heuristic_two(state, goal_state):
     heur_two_interim = [ abs(state[i-1]-i) for i in state]
     heur_two_interim = [ (j%4)+(j//4) for j in heur_two_interim]
     heur_two = sum(heur_two_interim)
     return heur_two
 
-
-def heurisitic_two_mod(state, goal_state):
+def heuristic_two_mod(state, goal_state):
     heur_two_interim = [ abs(state[i-1]-i) for i in goal_state]
     heur_two_x = [ (j%4) if (j%4) != 3 else 1 for j in heur_two_interim]
     heur_two_y = [ (j//4) if (j//4) !=3 else 1 for j in heur_two_interim]
@@ -118,28 +114,43 @@ def heurisitic_two_mod(state, goal_state):
     #print heur_two
     return heur_two
 
-# Proper Manhattan Distance inspired by the excerpt referenced in the question:
-# https://stackoverflow.com/questions/36490073/heuristic-for-rubiks-cube
-# Since this movement is similar to that of a rubik's cube, thought it might be helpful
-def heurisitic_seven(state, goal_state):
-    corners = [1,4,13,16]
-    edges = [2,3,5,8,9,12,14,15]
-    middles = [6,7,10,11]
-    heur_seven_corners = [get_manhattan(state[i-1],i) for i in corners]
-    heur_seven_corners = float(sum(heur_seven_corners)) / 2.0
-    heur_seven_edges = [get_manhattan(state[i-1],i) for i in edges]
-    heur_seven_edges = float(sum(heur_seven_edges)) / 4.0
-    heur_seven_middles = [get_manhattan(state[i-1],i) for i in middles]
-    heur_seven_middles = float(sum(heur_seven_middles)) / 2.0
-    return sqrt(max([heur_seven_corners,heur_seven_edges,heur_seven_middles]))
+# Heuristic Function 3: shortest, longest distance from origin
+# Initially thought this might be a good heuristic, as it would prefer the arrangement
+# that had the board arranged with the shortest, longest distance between pieces.
+# The thought would be that it would focus on the ones that were the least mixed up.
+# as i plaayed with it more, realize, that as it got higher the move count had little
+# to no impact in my heuristic f(s) calculation
+# Also realized it was most likely not admissible, since
+# i could end up with the 16 in the 1 slot, which would yield 15, and that would 
+# overestimate the cost.
+def heuristic_three(state, goal_state):
+    heur_three_interim = [ abs(state[i-1]-i) for i in state]
+    heur_three = max(heur_three_interim)
+    return heur_three
 
-# 
-def heurisitic_eight(state, goal_state):
-    heur_seven_interim = [get_manhattan(state[i-1],i) for i in goal_state]
-    heur_seven = float(sum(heur_seven_interim)) / 4.0
-    return heur_seven
+# Heuristic Function 4: Shortest, longest distance, manhattan distance
+# similar to before, but I used the manhattan distance used in #4, but the lostest it would be is 6
+# which seems like that would still be admissable.  It did work for upto board 6 in 13 seconds.
+def heuristic_four(state, goal_state):
+    heur_four_interim = [ abs(state[i-1]-i) for i in goal_state]
+    heur_four = max(heur_four_interim)
+    return heur_four
 
-def heurisitic_six(state, goal_state):
+
+# Heuristic Function 5: Going back to the notes, let's calculate the permutation
+# inversion for this board.  In the 8-puzzle, we found it to be inadmissable.  However, there are some differences
+# between that puzzle and this puzzle.  First of all, how the pieces move, and 
+# that there are 16 puzzle pieces, and not 15.
+def heuristic_five(state, goal_state):
+    heur_five_interim = [ abs(state[i-1]-i) for i in goal_state]
+#    print "distance slots", heur_two_interim
+    #heur_five_interim = [ (j%4)+(j//4) for j in heur_five_interim]
+#    print "distance board", heur_two_interim
+    heur_five = sum(heur_five_interim)
+    return heur_five
+
+# Corrected Manhattan Distance, I think    
+def heuristic_six(state, goal_state):
     corners = [goal_state[0], goal_state[3], goal_state[12], goal_state[15]]
     heur_two_interim = [ abs(state[i-1]-i) for i in corners]
     heur_two_x = [ (j%4) if (j%4) != 3 else 1 for j in heur_two_interim]
@@ -150,11 +161,31 @@ def heurisitic_six(state, goal_state):
     #print heur_two
     return heur_two
 
-def heurisitic_nine(state, goal_state):
-    heur_one = float(sum(([1 if state[i-1] != goal_state[i-1] else 0 for i in state ])))
-    return heurisitic_eight(state, goal_state) / heur_one
+# Proper Manhattan Distance inspired by the excerpt referenced in the question:
+# https://stackoverflow.com/questions/36490073/heuristic-for-rubiks-cube
+# Since this movement is similar to that of a rubik's cube, thought it might be helpful
+def heuristic_seven(state, goal_state):
+    corners = [1,4,13,16]
+    edges = [2,3,5,8,9,12,14,15]
+    middles = [6,7,10,11]
+    heur_seven_corners = [get_manhattan(state[i-1],i) for i in corners]
+    heur_seven_corners = float(sum(heur_seven_corners)) / 2.0
+    heur_seven_edges = [get_manhattan(state[i-1],i) for i in edges]
+    heur_seven_edges = float(sum(heur_seven_edges)) / 4.0
+    heur_seven_middles = [get_manhattan(state[i-1],i) for i in middles]
+    heur_seven_middles = float(sum(heur_seven_middles)) / 2.0
+    return max([heur_seven_corners,heur_seven_edges,heur_seven_middles])
 
-def heurisitic_ten(state, goal_state):
+def heuristic_eight(state, goal_state):
+    heur_seven_interim = [get_manhattan(state[i-1],i) for i in goal_state]
+    heur_seven = float(sum(heur_seven_interim)) / 4.0
+    return heur_seven
+
+def heuristic_nine(state, goal_state):
+    heur_one = float(sum(([1 if state[i-1] != goal_state[i-1] else 0 for i in state ])))
+    return heuristic_eight(state, goal_state) / heur_one
+
+def heuristic_ten(state, goal_state):
     heur_seven_interim = [get_manhattan_euclid(state[i-1],i) for i in goal_state]
     heur_seven = float(sum(heur_seven_interim)) / 4.0
     return heur_seven
@@ -165,7 +196,7 @@ def heurisitic_ten(state, goal_state):
 # admissable since when we are two 
 
 # Look for number of pairs that are in the correct order (1,2),(2,3) (3,4) (4,1)
-def heurisitic_eleven(state,goal_state):
+def heuristic_eleven(state,goal_state):
     pairs_in_order = 0
     for j in range (0,16,4):
         for i in range(0+j,3+j):
@@ -178,7 +209,7 @@ def heurisitic_eleven(state,goal_state):
 
 # Look for number of vertical pairs, and then take the max
 # of this or heuristic_eleven
-def heurisitic_twelve(state,goal_state):
+def heuristic_twelve(state,goal_state):
     pairs_in_order = 0
     for j in range (0,12,4):
         for i in range(0+j,4+j):
@@ -188,61 +219,23 @@ def heurisitic_twelve(state,goal_state):
     for j in range (12,16):
         if state[j] != state[j-12] - 4:
             pairs_in_order += 1
-    return min([float(pairs_in_order),heurisitic_eleven(state,goal_state),heurisitic_eight(state,goal_state)])/1.0
+    return min([float(pairs_in_order),heuristic_eleven(state,goal_state),heuristic_eight(state,goal_state)])/1.0
+
     
-    
-
-# Heuristic Function 3: shortest, longest distance from origin
-# Initially thought this might be a good heuristic, as it would prefer the arrangement
-# that had the board arranged with the shortest, longest distance between pieces.
-# The thought would be that it would focus on the ones that were the least mixed up.
-# as i plaayed with it more, realize, that as it got higher the move count had little
-# to no impact in my heuristic f(s) calculation
-# Also realized it was most likely not admissible, since
-# i could end up with the 16 in the 1 slot, which would yield 15, and that would 
-# overestimate the cost.
-def heurisitic_three(state, goal_state):
-    heur_three_interim = [ abs(state[i-1]-i) for i in state]
-    heur_three = max(heur_three_interim)
-    return heur_three
-
-# Heuristic Function 4: Shortest, longest distance, manhattan distance
-# similar to before, but I used the manhattan distance used in #4, but the lostest it would be is 6
-# which seems like that would still be admissable.  It did work for upto board 6 in 13 seconds.
-def heurisitic_four(state, goal_state):
-    heur_four_interim = [ abs(state[i-1]-i) for i in goal_state]
-    heur_four = max(heur_four_interim)
-    return heur_four
-
-
-# Heuristic Function 5: Going back to the notes, let's calculate the permutation
-# inversion for this board.  In the 8-puzzle, we found it to be inadmissable.  However, there are some differences
-# between that puzzle and this puzzle.  First of all, how the pieces move, and 
-# that there are 16 puzzle pieces, and not 15.
-def heurisitic_five(state, goal_state):
-    heur_five_interim = [ abs(state[i-1]-i) for i in goal_state]
-#    print "distance slots", heur_two_interim
-    #heur_five_interim = [ (j%4)+(j//4) for j in heur_five_interim]
-#    print "distance board", heur_two_interim
-    heur_five = sum(heur_five_interim)
-    return heur_five
-
-
-
 # The solver! - using BFS right now
 def solve(initial_board):
     fringe = PriorityQueue()
-    fringe.put((heurisitic_eight(initial_board,goal_state),[(initial_board),"",0]))
+    fringe.put((heuristic_eight(initial_board,goal_state),[(initial_board),"",0]))
     visited_states =[]
     i = 1
     while not fringe.empty() > 0:
-        (heurisitic_value, fringeitem) = fringe.get()
+        (heuristic_value, fringeitem) = fringe.get()
         [state, route_so_far,moves_so_far] = fringeitem
         # if i%1000 == 0:
         #     print "i ",i
         #     print "state ", state
-        #     print "heuristic value ", heurisitic_value
-        #     print "heuristic value ", heurisitic_twelve(state,goal_state) ," + ",moves_so_far
+        #     print "heuristic value ", heuristic_value
+        #     print "heuristic value ", heuristic_twelve(state,goal_state) ," + ",moves_so_far
         #     print "route_so_far ", route_so_far 
         #heuristic_value, moves_so_far, i
         for (succ, move) in successors( state ):
@@ -250,7 +243,7 @@ def solve(initial_board):
                 if is_goal(succ):
                     print "Fringe.gets ",i
                     return( route_so_far + " " + move )
-                fringe.put((heurisitic_eight(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
+                fringe.put((heuristic_eight(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] ))
                 visited_states.append(succ)
         i += 1
     return False

@@ -32,6 +32,48 @@ We must find an algorithm using heuristic to put them in order from 1 to 16.  We
 
 **Cost Function**:  No move is more expensive than any other move.  Each move will shift four tiles one square.
 
-**Heuristic Function**: This was by far the most challenging part of this part of the assignment.  In fact, it deserves its own discussion below.
+**Heuristic Function**: If the learning goal of this part of the assignment of understanding that finding a heuristic function can be incredibly difficult, I 100% achieved this. This was by far the most challenging part of this part of the assignment.  In fact, it deserves its own discussion below.
 
-**Algorithm**:
+**Algorithm**: I implemented A-star in order to find my solutions.
+
+## Summary of Observations -- Heuristic Functions are Hard
+
+In my code, you will find 13 heuristic functions for running the code.  Read in order, they display the evolution in my thinking and understanding of a heuristic.  The first few heuristics I used manhattan distance as you would in the 15-puzzle.  I later realized that was in error, because these pieces move differently enough.  If a tile is three tiles away, in actuality, it is only one tile away if you go around the side.  Heuristics one, two, two_mod, three, and four all are variations on this where I either used the value or a subset.  Because of the erros before, these were doomed to fail, since they were not admissable.
+
+In heuristic five, I tired permutation inversions, because, why not?  It was inadmissable as well.
+
+In heuristic, six, I corrected my manhattan distance, and then cleaned it up in heuristic eight (which was actually written before heuristic 7).  Up until this point, I could only solve board2, board4, and board6 in the correct amount of moves. Board8a and board8b took 10 moves instead of 8.  Board 12 was not solvable.  At this point, I could now solve board8a and board8b in a relatively short amount of time.  The heuristic was now admissable, and was providing results that did not violate the triangle inequality, indicating it might also be a consistent heuristic.
+
+Next, I did some research which lead to heuristics seven, nine, and ten.  Since the pieces looked similar to how rubik's cube pieces move, I looked for AI work on it for inspiration.  I found a post on [Stack Overflow about Rubik's cube heuristics](https://stackoverflow.com/questions/36490073/heuristic-for-rubiks-cube).  While not a one-to-one analogy, it gave some interesting ideas.  Alas, they did not work any better, but they are interesting to look at and could possibly lead to a better heuristic one day.
+
+Lastly, I took another fresh look, and worked backwards from solution sets. I noticed that pieces tended to move around in pairs according to where they needed to meet up.  I counted these pairs in eleven and twelve.  No luck.
+
+Of course, each of these also had slightly different versions that did not make the cut, so in total, I probably wrote another dozen that were so bad that they couldn't be put into the code.
+
+In conclusion, writing heuristics is hard.  Lesson well learned.
+
+## Greedy Search Fun
+
+For fun, I changed the algorithm to be a greedy best algorithm, and it solved board12 in just 9 seconds! It only took it 158 moves!
+
+Start state: 
+  5   7   8   1
+ 10   2   4   3
+  6   9  11  12
+ 15  13  14  16
+Solving...
+(5, 7, 8, 1, 10, 2, 4, 3, 6, 9, 11, 12, 15, 13, 14, 16)
+Fringe.gets  1862
+Solution found in 158 moves:
+ R1 L4 R2 D2 L2 U2 U3 R3 D4 L3 D3 D3 R3 U4 L3 U4 R3 D4 R3 U3 R3 D3 L3 L3 U4 R3
+ D4 L3 U4 R3 D4 R2 D4 L2 U4 U4 R2 D4 L2 U4 L4 U4 R4 D4 D2 L4 U2 R4 D2 L4 U2 L4
+ D2 R4 U2 L4 D2 L4 U2 R4 D2 R4 U2 R4 R4 D2 L4 U2 L4 D2 R4 U2 R4 D2 L4 U2 R4 U2
+ L4 D2 R4 U2 L4 U2 L2 D2 R2 U2 R2 U2 L2 D2 L2 U2 R2 D2 R2 U2 L2 R4 U2 L4 D2 L4
+ U4 R4 D4 L4 L4 U4 R4 D4 R4 R4 U4 R4 D4 L4 L4 U4 R4 D4 L4 U3 R4 D3 L4 U3 R4 D3
+ L4 U3 L4 D3 R4 U3 R4 D3 L4 U4 R4 D4 L4 D4 R2 U4 L2 D4 D4 L3 U4 R3 R2 U4 L2 L3
+ D4 R3
+ 
+
+
+
+## Future improvements
