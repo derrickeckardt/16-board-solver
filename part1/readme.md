@@ -73,6 +73,6 @@ For fun, I changed the algorithm to be a greedy best algorithm, and it solved bo
      D4 R3
  
 
-
-
 ## Future improvements
+
+A better heuristic.  One day, I will find it.
