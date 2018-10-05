@@ -38,7 +38,7 @@ A future improvement would be so you can also end in any route-segment.  Right n
 
 This could use serious refactoring.  I believe my code got better as I went along.  One thing I would change would be the use of dataframes.  I really didn't take advantage of it, and found working in lists much easier.  I should focus on one data handling method, instead going between the two of them in Parts 2 and 3.
 
-## Overal Thoughts
+## Overall Thoughts
 
 This stuff is fun.  I have learned a lot, and going through the pain, I feel like I really understand not just the algorithms, but the concepts behind them.
 
