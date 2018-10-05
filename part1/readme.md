@@ -55,22 +55,22 @@ In conclusion, writing heuristics is hard.  Lesson well learned.
 
 For fun, I changed the algorithm to be a greedy best algorithm, and it solved board12 in just 9 seconds! It only took it 158 moves!
 
-Start state: 
-  5   7   8   1
- 10   2   4   3
-  6   9  11  12
- 15  13  14  16
-Solving...
-(5, 7, 8, 1, 10, 2, 4, 3, 6, 9, 11, 12, 15, 13, 14, 16)
-Fringe.gets  1862
-Solution found in 158 moves:
- R1 L4 R2 D2 L2 U2 U3 R3 D4 L3 D3 D3 R3 U4 L3 U4 R3 D4 R3 U3 R3 D3 L3 L3 U4 R3
- D4 L3 U4 R3 D4 R2 D4 L2 U4 U4 R2 D4 L2 U4 L4 U4 R4 D4 D2 L4 U2 R4 D2 L4 U2 L4
- D2 R4 U2 L4 D2 L4 U2 R4 D2 R4 U2 R4 R4 D2 L4 U2 L4 D2 R4 U2 R4 D2 L4 U2 R4 U2
- L4 D2 R4 U2 L4 U2 L2 D2 R2 U2 R2 U2 L2 D2 L2 U2 R2 D2 R2 U2 L2 R4 U2 L4 D2 L4
- U4 R4 D4 L4 L4 U4 R4 D4 R4 R4 U4 R4 D4 L4 L4 U4 R4 D4 L4 U3 R4 D3 L4 U3 R4 D3
- L4 U3 L4 D3 R4 U3 R4 D3 L4 U4 R4 D4 L4 D4 R2 U4 L2 D4 D4 L3 U4 R3 R2 U4 L2 L3
- D4 R3
+    Start state: 
+      5   7   8   1
+     10   2   4   3
+      6   9  11  12
+     15  13  14  16
+    Solving...
+    (5, 7, 8, 1, 10, 2, 4, 3, 6, 9, 11, 12, 15, 13, 14, 16)
+    Fringe.gets  1862
+    Solution found in 158 moves:
+     R1 L4 R2 D2 L2 U2 U3 R3 D4 L3 D3 D3 R3 U4 L3 U4 R3 D4 R3 U3 R3 D3 L3 L3 U4 R3
+     D4 L3 U4 R3 D4 R2 D4 L2 U4 U4 R2 D4 L2 U4 L4 U4 R4 D4 D2 L4 U2 R4 D2 L4 U2 L4
+     D2 R4 U2 L4 D2 L4 U2 R4 D2 R4 U2 R4 R4 D2 L4 U2 L4 D2 R4 U2 R4 D2 L4 U2 R4 U2
+     L4 D2 R4 U2 L4 U2 L2 D2 R2 U2 R2 U2 L2 D2 L2 U2 R2 D2 R2 U2 L2 R4 U2 L4 D2 L4
+     U4 R4 D4 L4 L4 U4 R4 D4 R4 R4 U4 R4 D4 L4 L4 U4 R4 D4 L4 U3 R4 D3 L4 U3 R4 D3
+     L4 U3 L4 D3 R4 U3 R4 D3 L4 U4 R4 D4 L4 D4 R2 U4 L2 D4 D4 L3 U4 R3 R2 U4 L2 L3
+     D4 R3
  
 
 
