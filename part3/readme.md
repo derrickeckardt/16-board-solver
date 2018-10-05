@@ -32,13 +32,15 @@ In general, think of this as a search problem.
 
 In this, I took a look a locla search approach, where I continuously looked for the best scenario.  In order to get the optimal answer, you would have to search the entire state space.  In that case, one has to determine what is acceptable.
 
-For example, When I used the "ex-assign50.txt" dataset, which was provided by a classmate [Jonathan Branam via Piazza](https://piazza.com/class/jl1erlsbz1n6ax?cid=259) for testing, with an input line of k = 10, m = 10, and n = 2, my initial state had a value of 666 minutes.  Keeping all states, after evaluating 13000 states, it had found a state with a value 284 minutes, and continued to search.  Then, I added pruning, to have it throw away any state that was worse than the current best score.  I found that by pruning, the code speed up significantly (by as much as a factor of 10! on smaller classes) and the results were similar.  For the "ex-assign50.txt" dataset, the new minimum was 289 after 13000 states.  After 400,000+ states, it was still the same 289.  While this is a local minimum, it's pretty damn close.  A trade-off I would be willing to make for time and reduced computing resources.
+For example, When I used the "ex-assign50.txt" dataset, which was provided by a classmate [Jonathan Branam via Piazza](https://piazza.com/class/jl1erlsbz1n6ax?cid=259) for testing, with an input line of k = 10, m = 10, and n = 2, my initial state had a value of 666 minutes.  Keeping all states, after evaluating 13000 states, it had found a state with a value 284 minutes, and continued to search.  Then, I added pruning, to have it throw away any state that was worse than the current best score.  I found that by pruning, the code speed up significantly (by as much as a factor of 10! on smaller classes) and the results were similar.  For the "ex-assign50.txt" dataset, the new minimum was 289 after 13000 states.  After 400,000+ states, it was still the same 289.  While this is a local minimum, it's pretty damn close.  A trade-off I would be willing to make for time and reduced computing resources.  This reduces the size of the fringe.  I found even a threshold of 1% was 
 
 To enable pruning, I enabled the code to take an additional argument and works by entering the following at the command prompt:
 
     ./assign.py [input-file] [k] [m] [n] [max-buff]
 
-Where [max-buff] is percent, as a two digit number of how much worse than the best will the program accept keeping.  For example typing a value of 20 for max-buff will prune any state where the state is more than 20% worse than the ideal state.
+Where [max-buff] is percent, as a two digit number of how much worse than the best will the program accept keeping.  For example typing a value of 20 for max-buff will prune any state where the state is more than 20% worse than the ideal state.  You can even use a negative value, although not practical.  In practice, a low value, such as 1 is sufficient to make signifcant pruning occur, without too much lost in optimization.
+
+There is a potential limitation, that even with pruning, a solution may not be found in a reasonable time, depending on the complexity of the dataset.  The code would need to be modified to select an appropriate end point.
 
 ## Opportunities for Improvement
 

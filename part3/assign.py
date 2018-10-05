@@ -32,10 +32,10 @@ else:
     # not capping it byanything useful way
     max_buff = 100000.0
     
-# Define some functions
+# Defining some functions
 # Score the group
 def score_group(group,m,n):
-    # this would be calculated each time someone is added to a group
+    # this would be calculated each time groups are combined
     # Group structure should be [name, name, name]
     wrong_size = 0
     m_size = 0
@@ -56,8 +56,7 @@ def score_group(group,m,n):
 def score_all(groups, k,m,n):
     # this would be used to describe each state
     # we know the theoretical minimum value of this function is class_size / 3 * k.
-    # of course, we know that has everyone in groups of 3.
-    # Sum all of the individual scores for each group
+    # Then, Sum all of the individual scores for each group
     all_scores = sum(score_group(each,m,n) for each in groups)
     # calculate k for minutes for number of groups
     k_size = len(groups)*k
@@ -102,10 +101,10 @@ def solve(initial_groups):
                 fringe.append([groups,score])
             # Add a differentiator later to throw out bad values
             i += 1
-    #         if i%1000==0:
-    #             print i," states evaluated so far"
-    #             print "Best Score: ", best_score
-    #             print "Fringe Size: ",len(fringe)
+            # if i%1000==0:
+            #     print i," states evaluated so far"
+            #     print "Best Score: ", best_score
+            #     print "Fringe Size: ",len(fringe)
     # print i," states evaluated in total"
     return best_groups, best_score
     
@@ -118,6 +117,7 @@ def print_groups(groups):
         print line
     return None
 
+# Let's solve it!
 # Step Zero - Read in the datafile as a list of list
 c_l = pd.read_csv(input_file, delimiter=" ",header=None,names=['student','pref','friends','enemies'])
 
@@ -128,6 +128,6 @@ initial_groups = [groups,score_all(groups,k,m,n)]
 # Time to Solve
 best_groups, best_score = solve(initial_groups)
 
-# Prinout results
+# Printout results
 print_groups(best_groups)
 print best_score
