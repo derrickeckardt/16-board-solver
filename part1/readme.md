@@ -72,6 +72,7 @@ For fun, I changed the algorithm to be a greedy best algorithm, and it solved bo
      L4 U3 L4 D3 R4 U3 R4 D3 L4 U4 R4 D4 L4 D4 R2 U4 L2 D4 D4 L3 U4 R3 R2 U4 L2 L3
      D4 R3
  
+ Clearly, not an optimal solution.  But, it's a starting point for future work.
 
 ## Future improvements
 
