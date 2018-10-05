@@ -22,11 +22,11 @@ A full discussion and details can be found in the Readme file for Part 3, which 
 
 ## Extra Credit: Bells and Whistles
 
-Since I submitted it late, I did use the time to add a couple of extra features, so that perhaps the 10% penalty would be reduced.
+Since I submitted it late, I did use the time to add some extra features and run some tests, so that perhaps you would be willing to reduce the 10% penalty.
 
-Done
-- Part 2 You can start with any city that is in road segments, and not those in city segments.
-- 
+**Part 1 -- Getting Greedy:** I ran a greedy-best algorithm in addition to A-star to find board12.  Click to the Page 1 readme to find out how that went!
+
+**Part 2 -- Start on a Highway intersection:** In addition to starting in any You can start with any highway intersection that is in road segments, and not those in city segments.  For it to work 
   (would have to add additional logic to handle end city only in road segments)
 
 - Part 2 added a greedy-first algorithm

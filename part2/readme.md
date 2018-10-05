@@ -30,7 +30,7 @@ For time, I still had to use Haversine as the starting point, and then divided b
 
 The one snag on this, is for A-star, there is virtually no difference between the performance on time, distance, and segments, since they are all effectively using the same heuristic.
 
-Also, A-start using a segments heuristic, is essentially another version of BFS, just not quite as resource intensive.
+Also, A-star using a segments heuristic, is essentially another version of BFS, just not quite as resource intensive.
 
 The heuristic function does run into some trouble, since the latitude and longitude of the highway intersections are not known, which means it's hard to tell where I have moved to.  In order to account for this, the heuristic function uses the last known heuristic value.  On A*, this causes a lot of time to be spent chasing routes that should have been pruned off earlier on.
 

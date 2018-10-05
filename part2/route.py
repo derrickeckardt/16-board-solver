@@ -67,9 +67,9 @@ def solve_DFS(start_city,end_city,routing_algorithm):
     elif routing_algorithm == "ids":
         print "Solving with IDS..."
         if cost_function == "segments":
-            is_optimal == "yes"
+            is_optimal = "yes"
         else:
-            is_optimal == "no"
+            is_optimal = "no"
         start_depth = 1
     for i in range(start_depth,1000001):
         # print "depth = ",i
