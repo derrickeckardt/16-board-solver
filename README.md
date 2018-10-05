@@ -14,8 +14,27 @@ A full discussion and details can be found in the Readme file for Part 1, which 
 
 ## Part 2: Road Trip!
 
-A full discussion and details can be found in the Readme file for Part 1, which is located at [Part 2 Readme File](https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part2)
+A full discussion and details can be found in the Readme file for Part 2, which is located at [Part 2 Readme File](https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part2)
 
 ## Part 3: Group Assignments
 
 A full discussion and details can be found in the Readme file for Part 3, which is located at [Part 3 Readme File](https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part3)
+
+## Extra Credit: Bells and Whistles
+
+Since I submitted it late, I did use the time to add a couple of extra features, so that perhaps the 10% penalty would be reduced.
+
+Done
+- Part 2 You can start with any city that is in road segments, and not those in city segments.
+- 
+  (would have to add additional logic to handle end city only in road segments)
+
+- Part 2 added a greedy-first algorithm
+- 
+- Part 3 added the ability to set your own pruning
+- 
+- Part 3 Allows you to optimize for happy students instead of just time.
+
+## Future considerations
+
+This could use serious refactoring.  I believe my code got better as I went along.  One thing I would change would be the use of dataframes.  I really didn't take advantage of it, and found working in lists much easier.  I should focus on one data handling method, instead going between the two of them in Parts 2 and 3.

@@ -1,8 +1,16 @@
 #!/usr/bin/env python
-# solver16.py : Circular 16 Puzzle solver
-# Based on skeleton code by D. Crandall, September 2018
+# Indiana University Fall 2018 CSCI-B551 Elements of AI
+# Assignment 1, Part 1 - 16-Puzzle
 #
-
+###############################################################################
+###############################################################################
+#
+# A full discussion and details can be found in the Readme file for Part 1,
+# which is located at:
+# https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part1
+#
+###############################################################################
+###############################################################################
 # hit segmentation fault, which means th
 from Queue import PriorityQueue
 from random import randrange, sample
