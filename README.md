@@ -32,7 +32,7 @@ Since I submitted it late, I did use the time to add some extra features and run
 
 A future improvement would be so you can also end in any route-segment.  Right now, you can only end in those listed in city-gps.txt
 
-**Part 3 -- Add pruning:** While right now, it will search the entire state space, for larger classes, we might want some pruning available.  By entering an aidditional argument, the user can set a threshold for how high a value.  For large classes, rejecting any state that increases estimated faculty time improves perfomance significantly, with only a small amount of suboptimality introduced.  See [Assignment 3 Read Me]((https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part3) for additional details.
+**Part 3 -- Add pruning:** While right now, it will search the entire state space, for larger classes, we might want some pruning available.  By entering an aidditional argument, the user can set a threshold for how high a value.  For large classes, rejecting any state that increases estimated faculty time improves perfomance significantly, with only a small amount of suboptimality introduced.  See [Assignment 3 Read Me](https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part3) for additional details.
 
 ## Future considerations
 
