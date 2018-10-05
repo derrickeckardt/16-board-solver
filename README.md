@@ -26,10 +26,13 @@ Since I submitted it late, I did use the time to add some extra features and run
 
 **Part 1 -- Getting Greedy:** I ran a greedy-best algorithm in addition to A-star to find board12.  Click to the Page 1 readme to find out how that went!
 
-**Part 2 -- Start on a Highway intersection:** In addition to starting in any You can start with any highway intersection that is in road segments, and not those in city segments.  For it to work 
-  (would have to add additional logic to handle end city only in road segments)
+**Part 2 -- Start on a Highway intersection:** For A-star and Greedy, you can start with any highway intersection that is in road segments, and not those in city segments.  For it to work, the highway intersection must be placed in quotes on the input line:
 
-- Part 2 added a greedy-first algorithm
+    ./route.py 'Jct_I-75_&_US_31,_Michigan' Alanson,_Michigan greedy time
+
+A future improvement would be so you can also end in any route-segment.  Right now, you can only end in those listed in city-gps.txt
+
+**Part 3 -- Add pruning:** While right now, it will search the entire state space, for larger classes, we might want some pruning available.  By entering an aidditional argument, the user can set a threshold for how high a value.  For large classes, rejecting any state that increases estimated faculty time improves perfomance significantly, with only a small amount of suboptimality introduced.  See [Assignment 3 Read Me]((https://github.iu.edu/cs-b551-fa2018/derrick-a1/tree/master/part3) for additional details.
 - 
 - Part 3 added the ability to set your own pruning
 - 

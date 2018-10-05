@@ -250,8 +250,10 @@ rs['time'] = rs.length / rs.speed_limit
 ##############################################################
 
 if cost_function == "segments" or cost_function== "distance" or cost_function == "time":
-    if (start_city not in cs['city'].values.tolist() or end_city not in cs['city'].values.tolist()) and routing_algorithm != "astar":
+    if (start_city not in cs['city'].values.tolist() or end_city not in cs['city'].values.tolist()) and (routing_algorithm != "astar" and routing_algorithm != "greedy"):
         los_gehts = "'start_city' or 'end_city' is not in city-gps.txt.  Please check your input for any potential errors."
+    elif end_city not in cs['city'].values.tolist() and (routing_algorithm == "astar" or routing_algorithm == "greedy"):
+        los_gehts = "'end_city' is not in city-gps.txt.  Please check your input for any potential errors."
     elif routing_algorithm == "bfs":     
         los_gehts = solve_BFS(start_city,end_city)
     elif routing_algorithm == "dfs":
