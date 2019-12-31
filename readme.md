@@ -2,7 +2,7 @@
 
 Completed by Derrick Eckardt as part of CSCI-B551 at Indiana University in Fall 2018.
 
-The assignment prompt can be found at [Assignment 1 Prompt](https://github.com/derrickeckardt/blob/master/a1-v2.pdf).  This readme file provides the required elements and my discussion of the process and the findings.
+The assignment prompt can be found at [Assignment 1 Prompt](https://github.com/derrickeckardt/16-board-solver/blob/master/a1-v2.pdf).  This readme file provides the required elements and my discussion of the process and the findings.
 
 ## Summary of Problem and Problem Abstraction
 
