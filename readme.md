@@ -1,8 +1,8 @@
-# Part 1: The 16-puzzle
+# The 16-puzzle
 
-Completed by Derrick Eckardt on October 2, 2018.  Please direct any questions to [derrick@iu.edu](mailto:derrick@iu.edu)
+Completed by Derrick Eckardt as part of CSCI-B551 at Indiana University in Fall 2018.
 
-The assignment prompt can be found at [Assignment 1 Prompt](https://github.iu.edu/cs-b551-fa2018/derrick-a1/blob/master/a1-v2.pdf).  This readme file provides the required elements and my discussion of the process and the findings.
+The assignment prompt can be found at [Assignment 1 Prompt](https://github.com/derrickeckardt/blob/master/a1-v2.pdf).  This readme file provides the required elements and my discussion of the process and the findings.
 
 ## Summary of Problem and Problem Abstraction
 
@@ -13,8 +13,7 @@ We are given a 4 x 4 puzzle board, with tile pieces 1 to 16 that are not numeric
     12 14 10 11
     13 2  15 16
 
-We must find an algorithm using heuristic to put them in order from 1 to 16.  We may only shift a row to the left or the right or a column up or down one tile at a time, with the tiles wrapping around to the other side.  Our algorithm should solve for a board that that requires 12 moves.
-
+We must find an algorithm using a heuristic function to put the tiles in order from 1 to 16.  We may only shift a row to the left or the right or a column up or down one tile at a time, with the tiles wrapping around to the other side.  Our algorithm should solve for a board that that requires up to 12 moves.  Not all boards are solveable.
 
 **Initial State**: A 4 by 4 board with 16 tiles number from 1 to 16.  The tiles are not in numerical order.
 
