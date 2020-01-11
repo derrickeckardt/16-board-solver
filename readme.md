@@ -1,8 +1,20 @@
-# The 16-puzzle
+# The 16-puzzle Solved Using A-star Algorithm
+
+The assignment prompt can be found at [Assignment 1 Prompt](https://github.com/derrickeckardt/16-board-solver/blob/master/a1-v2.pdf).  This readme file provides an overview of the problem, key factors, and a discussion of the process and the findings.  I would love to discuss any questions or comments you may have about it.
 
 Completed by Derrick Eckardt as part of CSCI-B551 at Indiana University in Fall 2018.
 
-The assignment prompt can be found at [Assignment 1 Prompt](https://github.com/derrickeckardt/16-board-solver/blob/master/a1-v2.pdf).  This readme file provides the required elements and my discussion of the process and the findings.
+## To Run Program
+
+The program may be run by typing:
+
+    ./solver16.py boardfile
+    
+or 
+
+    python solver16.py boardfile
+    
+where boardfile is a text file with the layout of the board to be solved.  Several are included in the same directory as solver16.py, such as board2, board4, board6, board8a, board8b, board8c, and board12.  The number in the file indicates the minimum number of moves required in an optimal solution.
 
 ## Summary of Problem and Problem Abstraction
 
@@ -30,7 +42,7 @@ We must find an algorithm using a heuristic function to put the tiles in order f
 
 **Cost Function**:  No move is more expensive than any other move.  Each move will shift four tiles one square.
 
-**Heuristic Function**: If the learning goal of this part of the assignment of understanding that finding a heuristic function can be incredibly difficult, I 100% achieved this. This was by far the most challenging part of this part of the assignment.  In fact, it deserves its own discussion below.
+**Heuristic Function**: If the learning goal of this assignment was to understand the difficulty in finding a heuristic function, it was achieved.  In short, I settled on summing together a variant of a Manhattan-distance at each o the 16 squares.  See the discussion below for further details.
 
 **Algorithm**: I implemented A-star in order to find my solutions.
 
