@@ -89,13 +89,12 @@ if len(start_state) != 16:
     print "Error: couldn't parse start state file"
 else:
     print "Start state: "
-    print_board(tuple(start_state))
-    
     start_state_tuple = tuple(start_state)
+    print_board(start_state_tuple)
+    
     print "Solving..."
     print start_state_tuple
-    #route = solve_heap(start_state_tuple)
-    profile.run("route = solve_heap(start_state_tuple)")
-    
+    route = solve_heap(start_state_tuple)
+
     print "Solution found in " + str(len(route)/3) + " moves:" + "\n" + route
     print "\n"
