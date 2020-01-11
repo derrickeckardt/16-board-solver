@@ -11,16 +11,9 @@
 ###############################################################################
 ###############################################################################
 
-from Queue import PriorityQueue
 from heapq import *
-from random import randrange, sample
-from collections import Counter
 import sys
 import string
-import operator
-from operator import add
-from math import sqrt
-import profile
 
 # shift a specified row left (-1) or right (1)
 def shift_row(state, row, dir):
