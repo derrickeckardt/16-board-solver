@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Indiana University Fall 2018 CSCI-B551 Elements of AI
 # Assignment 1, Part 1 - 16-Puzzle
 #
@@ -27,10 +27,10 @@ def shift_col(state, col, dir):
     s[col::4] = change_col[-dir:] + change_col[:-dir]
     return (tuple(s), ("U" if dir == -1 else "D") + str(col+1) )
 
-# pretty-print board state
+# pretty-print (board state
 def print_board(row):
     for j in range(0, 16, 4):
-        print '%3d %3d %3d %3d' % (row[j:(j+4)])
+        print ('%3d %3d %3d %3d' % (row[j:(j+4)]))
 
 # return a list of possible successor states
 def successors(state):
@@ -71,7 +71,7 @@ def solve_heap(initial_board):
         for (succ, move) in successors( state ):
             if succ not in visited_states:
                 if is_goal(succ):
-                    print "States Tested from Fringe:",i
+                    print ("States Tested from Fringe:",i)
                     return( route_so_far + " " + move )
                 heappush(fringe, ((heuristic_eight(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] )))
                 visited_states[succ] = True
@@ -86,15 +86,15 @@ with open(sys.argv[1], 'r') as file:
 goal_state = sorted(start_state)
 
 if len(start_state) != 16:
-    print "Error: couldn't parse start state file"
+    print ("Error: couldn't parse start state file")
 else:
-    print "Start state: "
+    print ("Start state: ")
     start_state_tuple = tuple(start_state)
     print_board(start_state_tuple)
     
-    print "Solving..."
-    print start_state_tuple
+    print ("Solving...")
+    print (start_state_tuple)
     route = solve_heap(start_state_tuple)
 
-    print "Solution found in " + str(len(route)/3) + " moves:" + "\n" + route
-    print "\n"
+    print ("Solution found in " + str(len(route)/3) + " moves:" + "\n" + route)
+    print ("\n")
