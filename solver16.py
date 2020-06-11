@@ -14,6 +14,15 @@
 from heapq import *
 import sys
 import string
+import threading
+import multiprocessing as mp
+
+
+
+def worker(num):
+    """thread worker function"""
+    print('Worker:', num)
+    return
 
 # shift a specified row left (-1) or right (1)
 def shift_row(state, row, dir):
@@ -59,12 +68,21 @@ def heuristic_eight(state, goal_state):
         total += get_manhattan(state[i-1],i)
     return total/4.0
 
+def heuristic_eight_mp(state, goal_state,pool):
+    total = 0.0
+    result = pool.starmap(get_manhattan, [(state[i-1],i) for i in goal_state])
+    total = sum(result)
+    return total/4.0
+
+
 # The solver! - using BFS right now
 def solve_heap(initial_board):
     fringe = []
     heappush(fringe,((heuristic_eight(initial_board,goal_state),[(initial_board),"",0])))
     visited_states = {}
     i = 1
+    pool = mp.Pool(processes=4)
+
     while len(fringe) > 0:
         (heuristic_value, [state, route_so_far,moves_so_far]) = heappop(fringe)
         #  = fringeitem
@@ -73,7 +91,7 @@ def solve_heap(initial_board):
                 if is_goal(succ):
                     print ("States Tested from Fringe:",i)
                     return( route_so_far + " " + move )
-                heappush(fringe, ((heuristic_eight(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] )))
+                heappush(fringe, ((heuristic_eight_mp(succ,goal_state,pool)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] )))
                 visited_states[succ] = True
         i += 1
     return False
