@@ -81,7 +81,7 @@ def solve_heap(initial_board):
     heappush(fringe,((heuristic_eight(initial_board,goal_state),[(initial_board),"",0])))
     visited_states = {}
     i = 1
-    pool = mp.Pool(processes=4)
+    # pool = mp.Pool(processes=4)
 
     while len(fringe) > 0:
         (heuristic_value, [state, route_so_far,moves_so_far]) = heappop(fringe)
@@ -91,9 +91,9 @@ def solve_heap(initial_board):
                 if is_goal(succ):
                     print ("States Tested from Fringe:",i)
                     return( route_so_far + " " + move )
-                heappush(fringe, ((heuristic_eight_mp(succ,goal_state,pool)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] )))
+                # heappush(fringe, ((heuristic_eight_mp(succ,goal_state,pool)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] )))
                 # without mp
-                # heappush(fringe, ((heuristic_eight(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] )))
+                heappush(fringe, ((heuristic_eight(succ,goal_state)+moves_so_far+1, [(succ), route_so_far + " " + move,moves_so_far+1] )))
                 visited_states[succ] = True
         i += 1
     return False
